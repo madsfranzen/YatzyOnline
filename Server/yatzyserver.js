@@ -1,7 +1,7 @@
 console.log("SERVER STARTED");
 
 import express from "express";
-import clientPromise from "../database/db.js";
+import mongoClient from "../database/db.js";
 
 const app = express();
 const port = 10000;
@@ -16,9 +16,9 @@ app.get('/play', (req, res) => {
   res.send('Hello Play Game!')
 })
 
-app.get('/users', (req, res) => {  
+app.get('/users', async (req, res) => {  
   console.log("REQUESTING USERS");
-  const users = clientPromise.collection('inventory').find({});
+  const users = await mongoClient.collection('inventory').find({});
   res.send(users);
 })
 
