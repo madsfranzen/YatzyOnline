@@ -5,13 +5,23 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 let client;
-let db;
+let database;
+
+const db = async () => {
+
+    if (client && database) {
+        return database;
+    }
+
+    client = new MongoClient(process.env.MONGODB_URI);
+
+    await client.connect();
+
+    database = client.db(process.env.MONGODB_DATABASE);
+
+    return database;
+}
 
 
-const connectToDatabase = () => {}
+export default db;
 
-
-const mongoClient = new MongoClient(process.env.MONGODB_URI);
-
-const clientPromise = mongoClient.connect();
-export default mongoClient;

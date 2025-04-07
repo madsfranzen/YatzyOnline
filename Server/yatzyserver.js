@@ -1,7 +1,7 @@
 console.log("SERVER STARTED");
 
 import express from "express";
-import mongoClient from "../database/db.js";
+import db from "../database/db.js";
 
 const app = express();
 const port = 10000;
@@ -18,7 +18,8 @@ app.get('/play', (req, res) => {
 
 app.get('/users', async (req, res) => {  
   console.log("REQUESTING USERS");
-  const users = await mongoClient.collection('users').find({});
+  const db = await db();
+  const users = db.collection('users');
   res.send(users);
 })
 
