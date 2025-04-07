@@ -13,12 +13,12 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "yatzyserver.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "mocha test/test.test.js"
+    "start": "node Server/yatzyserver.js"
   },
   "devDependencies": {
     "chai": "^5.2.0",
