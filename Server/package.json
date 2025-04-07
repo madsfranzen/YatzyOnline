@@ -12,6 +12,7 @@
   "type": "module",
   "main": "yatzyserver.js",
   "scripts": {
+    "start": "node yatzyserver.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

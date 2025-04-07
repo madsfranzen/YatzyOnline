@@ -1,6 +1,6 @@
 # YATZY Project
 
-https://yatzyonline.onrender.com
+https://yatzyonline-client.onrender.com/
 
 Created by:
 - Nils
