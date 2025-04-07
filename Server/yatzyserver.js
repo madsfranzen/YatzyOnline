@@ -1,8 +1,7 @@
 console.log("SERVER STARTED");
 
 import express from "express";
-import clientPromise from "./database/db.js";
-
+import clientPromise from "../database/db.js";
 
 const app = express();
 const port = 10000;
