@@ -17,9 +17,9 @@ app.get('/play', (req, res) => {
 })
 
 app.get('/users', async (req, res) => {  
-  console.log("REQUESTING USERS");
   const db = await connectToDatabase();
-  const users = db.collection('users');
+  const users = await db.collection('users').find().toArray();
+  console.log(users);
   res.send(users);
 })
 
