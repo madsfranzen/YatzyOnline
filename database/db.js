@@ -7,7 +7,7 @@ dotenv.config();
 let client;
 let database;
 
-const db = async () => {
+const connectToDatabase = async () => {
 
     if (client && database) {
         return database;
@@ -23,5 +23,5 @@ const db = async () => {
 }
 
 
-export default db;
+export default connectToDatabase;
 

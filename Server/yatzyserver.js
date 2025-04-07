@@ -1,7 +1,7 @@
 console.log("SERVER STARTED");
 
 import express from "express";
-import db from "../database/db.js";
+import connectToDatabase from "../database/db.js";
 
 const app = express();
 const port = 10000;
@@ -18,7 +18,7 @@ app.get('/play', (req, res) => {
 
 app.get('/users', async (req, res) => {  
   console.log("REQUESTING USERS");
-  const db = await db();
+  const db = await connectToDatabase();
   const users = db.collection('users');
   res.send(users);
 })
