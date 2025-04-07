@@ -10,10 +10,15 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-
 app.get('/play', (req, res) => {
   console.log("HELLO PLAY GAME");
   res.send('Hello Play Game!')
+})
+
+app.get('/users', (req, res) => {  
+  console.log("REQUESTING USERS");
+  const users = db.collection('inventory').find({});
+  res.send(users);
 })
 
 app.listen(port, () => {
