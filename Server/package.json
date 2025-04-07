@@ -1,7 +1,6 @@
 {
-  "name": "yatzy",
+  "name": "server",
   "version": "1.0.0",
-  "description": "yatzy javascript",
   "homepage": "https://github.com/madsfranzen/Yatzy#readme",
   "bugs": {
     "url": "https://github.com/madsfranzen/Yatzy/issues"
@@ -10,20 +9,14 @@
     "type": "git",
     "url": "git+https://github.com/madsfranzen/Yatzy.git"
   },
-  "license": "ISC",
-  "author": "",
   "type": "module",
   "main": "yatzyserver.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "start": "node Server/yatzyserver.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "chai": "^5.2.0",
-    "mocha": "^11.1.0"
-  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
