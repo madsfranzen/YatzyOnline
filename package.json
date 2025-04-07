@@ -1,0 +1,27 @@
+{
+  "name": "yatzy",
+  "version": "1.0.0",
+  "description": "yatzy javascript",
+  "homepage": "https://github.com/madsfranzen/Yatzy#readme",
+  "bugs": {
+    "url": "https://github.com/madsfranzen/Yatzy/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsfranzen/Yatzy.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/test.test.js"
+  },
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "mocha": "^11.1.0"
+  }
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="stylesheet.css" />
+<script src="/server/gui.js" defer type="module"></script>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/x-icon" href="../resources/favicon.ico">
+  <title>Yatzy</title>
+</head>
+
+<body class="hero">
+  <div class="main-container-yatzy">
+    <div class="top-container">
+      <div class="top-upper-container">
+        <div class="dice-container">
+          <img id="die1" class="diceimg" alt="Die1" />
+          <img id="die2" class="diceimg" alt="Die2" />
+          <img id="die3" class="diceimg" alt="Die3" />
+          <img id="die4" class="diceimg" alt="Die4" />
+          <img id="die5" class="diceimg" alt="Die5" />
+        </div>
+      </div>
+      <div class="top-under-container">
+        <div class="top-under-container-left">
+          <label for="score">Score
+            <p id="score">0</p>
+          </label>
+          <label for="turn">Turn
+            <p id="turn">0</p>
+          </label>
+        </div>
+        <div class="top-under-container-right"></div>
+        <button class="roll-button" id="roll-button">Roll</button>
+        <button class="reset-button" id="reset-button">Reset</button>
+      </div>
+    </div>
+    <div class="bottom-container">
+      <div class="bottom-main-container">
+        <div class="bottom-left-left-container">
+        </div>
+        <div class="bottom-left-right-container">
+        </div>
+        <div class="bottom-right-left-container">
+          <label for="sum">Sum <input type="text" id="sum" readonly /></label>
+          <label for="bonus">Bonus <input type="text" id="bonus" readonly /></label>
+        </div>
+        <div class="bomttom-right-right-container">
+          <label for="total">Total <input type="text" id="total" readonly /></label>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
