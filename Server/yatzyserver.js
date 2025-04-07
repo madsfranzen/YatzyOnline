@@ -18,7 +18,7 @@ app.get('/play', (req, res) => {
 
 app.get('/users', async (req, res) => {  
   console.log("REQUESTING USERS");
-  const users = await mongoClient.collection('inventory').find({});
+  const users = await mongoClient.collection('users').find({});
   res.send(users);
 })
 
