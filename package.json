@@ -23,5 +23,8 @@
   "devDependencies": {
     "chai": "^5.2.0",
     "mocha": "^11.1.0"
+  },
+  "dependencies": {
+    "mongodb": "^6.15.0"
   }
 }
