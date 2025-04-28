@@ -10,9 +10,9 @@
     "url": "git+https://github.com/madsfranzen/Yatzy.git"
   },
   "type": "module",
-  "main": "yatzyserver.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node yatzyserver.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
