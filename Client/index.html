@@ -1,13 +1,91 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>YATZY</title>
-		<link rel="icon" href="/favicon.ico" type="image/x-icon">
-		<link href="css/style.css" rel="stylesheet">
-	</head>
-	<body>
-	<h1>HELLO YATZY</h1>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YATZY</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-left">
+        <h1>YATZY</h1>
+      </div>
+      <div class="navbar-right">
+        <!-- This will show username if logged in -->
+        <span id="user-status">Not logged in</span>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      <h2>Available Lobbies</h2>
+
+      <table class="lobby-table">
+        <thead>
+          <tr>
+            <th>Lobby Name</th>
+            <th>Players</th>
+            <th>Status</th>
+            <th>Join</th>
+          </tr>
+        </thead>
+        <tbody id="lobby-list">
+          <!-- Lobbies will be inserted here -->
+        </tbody>
+      </table>
+
+      <p id="no-lobbies" style="display: none">
+        No lobbies available. Create one!
+      </p>
+    </main>
+
+    <script>
+      // Example dynamic data
+      const username = "Guest"; // Replace with real user
+      const lobbies = [
+        {
+          id: 1,
+          name: "Chill Game",
+          players: 2,
+          maxPlayers: 5,
+          status: "Open",
+        },
+        {
+          id: 2,
+          name: "Hardcore Yatzy",
+          players: 1,
+          maxPlayers: 4,
+          status: "Waiting",
+        },
+      ];
+
+      // Set username status
+      const userStatus = document.getElementById("user-status");
+      if (username) {
+        userStatus.textContent = `Logged in as ${username}`;
+      }
+
+      // Render lobbies
+      const lobbyList = document.getElementById("lobby-list");
+      const noLobbies = document.getElementById("no-lobbies");
+
+      if (lobbies.length > 0) {
+        lobbies.forEach((lobby) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+          <td>${lobby.name}</td>
+          <td>${lobby.players} / ${lobby.maxPlayers}</td>
+          <td>${lobby.status}</td>
+          <td><a href="/join/${lobby.id}">Join</a></td>
+        `;
+          lobbyList.appendChild(tr);
+        });
+      } else {
+        noLobbies.style.display = "block";
+      }
+    </script>
+  </body>
 </html>
