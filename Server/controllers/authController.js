@@ -24,6 +24,7 @@ export function logout(req, res) {
     if (err) {
       return res.status(500).json({ message: "Failed to log out" });
     }
-    res.redirect("/login");
+    // Respond with a JSON indicating success
+    res.json({ message: "Successfully logged out" });
   });
 }

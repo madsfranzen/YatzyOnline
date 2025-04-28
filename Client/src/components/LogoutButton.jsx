@@ -1,32 +1,29 @@
-import React from 'react';
-import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // For redirecting using React Router
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import React from "react";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const LogoutButton = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Create a navigate function
 
   const handleLogout = async () => {
     try {
-      // Perform the logout request using fetch (GET request to the backend)
-      const response = await fetch(BACKEND_URL + '/auth/logout', {
-        method: 'GET',
-        credentials: 'include', // Make sure cookies (session) are included in the request
+      const response = await fetch("https://yatzyonline.onrender.com/auth/logout", {
+        method: "GET", // Assuming GET for logout, change if necessary
+        credentials: "include", // Include credentials (cookies/session data)
       });
 
-      // Check if the response is successful (status code 200)
-      if (response.ok) {
-        // Optionally, remove the token from localStorage or sessionStorage
-        localStorage.removeItem('token');
-
-        // Redirect to the login page manually
-        navigate('/login');
-      } else {
-        // Handle any errors from the server
-        console.error('Logout failed', await response.json());
+      if (!response.ok) {
+        throw new Error(`Logout failed with status: ${response.status}`);
       }
+
+      const data = await response.json();
+      console.log(data.message); // This should be "Successfully logged out"
+      
+      // Redirect to the login page using React Router
+      navigate("/login"); // Programmatically navigate to login page
+
     } catch (error) {
-      console.error('Error during logout', error);
+      console.error("Error during logout:", error);
     }
   };
 
