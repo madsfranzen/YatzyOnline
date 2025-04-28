@@ -5,11 +5,11 @@ import playerRoutes from "./routes/playerRoutes.js";
 import session from "express-session";
 import { CheckSession } from "./middleware/auth.js";
 import authRoutes from "./routes/authRoutes.js";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
-const cors = require("cors");
 
 async function startServer() {
   try {
