@@ -22,7 +22,6 @@
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "mongodb": "^6.15.0",
-    "pug": "^3.0.3",
-    "pug-cli": "^1.0.0-alpha6"
+    "mongoose": "^8.14.0"
   }
 }
