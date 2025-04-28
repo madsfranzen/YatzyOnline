@@ -6,6 +6,7 @@
     <title>YATZY</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link href="css/style.css" rel="stylesheet" />
+    <script src="/proxy.js" defer></script>
   </head>
   <body>
     <!-- Navbar -->
@@ -15,7 +16,6 @@
       </div>
       <div class="navbar-right">
         <!-- This will show username if logged in -->
-        <span id="user-status">Not logged in</span>
       </div>
     </nav>
 
@@ -41,51 +41,5 @@
         No lobbies available. Create one!
       </p>
     </main>
-
-    <script>
-      // Example dynamic data
-      const username = "Guest"; // Replace with real user
-      const lobbies = [
-        {
-          id: 1,
-          name: "Chill Game",
-          players: 2,
-          maxPlayers: 5,
-          status: "Open",
-        },
-        {
-          id: 2,
-          name: "Hardcore Yatzy",
-          players: 1,
-          maxPlayers: 4,
-          status: "Waiting",
-        },
-      ];
-
-      // Set username status
-      const userStatus = document.getElementById("user-status");
-      if (username) {
-        userStatus.textContent = `Logged in as ${username}`;
-      }
-
-      // Render lobbies
-      const lobbyList = document.getElementById("lobby-list");
-      const noLobbies = document.getElementById("no-lobbies");
-
-      if (lobbies.length > 0) {
-        lobbies.forEach((lobby) => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-          <td>${lobby.name}</td>
-          <td>${lobby.players} / ${lobby.maxPlayers}</td>
-          <td>${lobby.status}</td>
-          <td><a href="/join/${lobby.id}">Join</a></td>
-        `;
-          lobbyList.appendChild(tr);
-        });
-      } else {
-        noLobbies.style.display = "block";
-      }
-    </script>
   </body>
 </html>
