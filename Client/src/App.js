@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import "./App.css";
 
 function App() {
+
   const [user, setUser] = useState(null); // State for user info
 
   const handleLoginSuccess = (data) => {
