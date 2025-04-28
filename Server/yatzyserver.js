@@ -2,8 +2,16 @@ console.log("SERVER STARTED");
 
 import express from "express";
 import connectToDatabase from "./database/db.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
 const app = express();
 const port = 10000;
+
+// These two lines simulate __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Pug setup
 app.set('view engine', 'pug');
