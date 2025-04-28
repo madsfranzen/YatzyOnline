@@ -16,7 +16,14 @@ async function startServer() {
     await connectToDatabase();
 
     app.use(express.json());
-    app.use(cors());
+
+    // Configure CORS to allow credentials and specific origin
+    app.use(
+      cors({
+        origin: ["http://localhost:3000", "https://yatzyonline-client.onrender.com"], // List of allowed origins
+        credentials: true, // Allow credentials (cookies, auth tokens, etc.)
+      }),
+    );
 
     app.use(
       session({

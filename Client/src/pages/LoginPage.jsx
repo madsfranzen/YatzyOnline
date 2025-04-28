@@ -10,6 +10,10 @@ export default function LoginPage({ onLoginSuccess }) {
 	const [error, setError] = useState('');
 
 	const handleLogin = async () => {
+		
+		// FOR TESTING
+		onLoginSuccess({name: 'Mads'})
+
 		try {
 			const response = await fetch(BACKEND_URL + '/auth/login', {
 				method: 'POST',
