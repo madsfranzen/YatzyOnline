@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Navbar from "./components/Navbar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import LoginPage from "./components/LoginPage";
-import HomeScreen from "./components/HomeScreen";
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
 import "./App.css";
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
             path="/login"
             element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
           />
-          <Route path="/" element={<HomeScreen />} />
+          <Route path="/" element={<HomePage />} />
         </Routes>
       </div>
     </Router>

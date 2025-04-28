@@ -1,5 +1,5 @@
 import { Container, Box, Typography } from '@mui/material';
-import LobbyList from './LobbyList'; // Assuming LobbyList is imported
+import LobbyList from '../components/LobbyList'; // Assuming LobbyList is imported
 
 export default function LobbyPage() {
 	return (
