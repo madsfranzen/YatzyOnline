@@ -2,13 +2,16 @@ console.log("SERVER STARTED");
 
 import express from "express";
 import connectToDatabase from "./database/db.js";
-
 const app = express();
 const port = 10000;
 
-app.get("/", (_req, res) => {
-  console.log("HELLO YATZY");
-  res.send("Hello World!");
+// Pug setup
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (_req, res) => {
+  res.render('lobbies', { title: 'Home Page' });
 });
 
 app.get("/play", (_req, res) => {
