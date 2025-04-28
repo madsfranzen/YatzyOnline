@@ -1,10 +1,26 @@
-// Get the navbar-right element (this is the first element with the 'navbar-right' class)
-const navbarright = document.getElementsByClassName('navbar-right')[0];
+const navbarright = document.getElementsByClassName("navbar-right")[0];
 
-// Create a login button element
-const loginButton = document.createElement('button');
-loginButton.textContent = 'Login'; // Set the button text
+const backend = "https://yatzyonline.onrender.com/";
 
-// Append the button to the navbar-right
-navbarright.appendChild(loginButton);
+async function checkLogin() {
+  const response = await fetch(backend + "/auth/login", {
+    method: "GET",
+    headers: {
+      "content-Type": "application/json",
+    },
+  });
+  if (response.status != 200) {
+    return false;
+  }
+  const player = await response.json();
+  return player;
+}
 
+if (!checkLogin()) {
+  const loginButton = document.createElement("button");
+  loginButton.textContent = "Login";
+  navbarright.appendChild(loginButton);
+} else{
+	const userName = document.createElement("p")
+	// userName.textContent = 
+}
