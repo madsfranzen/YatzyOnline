@@ -13,9 +13,8 @@ function App() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      // Assuming you have a way to verify token (e.g., a token validation endpoint)
-      // Set the user data based on the token or just set the token as logged in
-      setUser({ name: "Token" }); // You can also decode the token if it contains user info
+      // Simulating a logged-in user, you can also decode the token if it contains user info
+      setUser({ name: "Token" });
     }
   }, []); // Empty dependency array ensures this runs only on mount (initial load)
 
@@ -25,10 +24,19 @@ function App() {
     localStorage.setItem("token", data.token); // Store the token
   };
 
+  const handleLogout = () => {
+    // Clear user data from state and remove token from localStorage
+    setUser(null);
+    localStorage.removeItem("token");
+
+    // Optionally, you can redirect to login page after logout
+    window.location.href = "/login";
+  };
+
   return (
     <Router>
       <div>
-        <Navbar user={user} onLogin={() => {}} /> {/* Your Navbar here */}
+        <Navbar user={user} onLogout={handleLogout} /> {/* Pass handleLogout to Navbar */}
         <Routes>
           <Route
             path="/login"
@@ -42,3 +50,4 @@ function App() {
 }
 
 export default App;
+

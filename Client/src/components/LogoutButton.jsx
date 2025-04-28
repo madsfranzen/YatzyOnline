@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
-const LogoutButton = () => {
+const LogoutButton = ({ onLogout }) => {
   const navigate = useNavigate(); // Create a navigate function
 
   const handleLogout = async () => {
@@ -19,6 +19,9 @@ const LogoutButton = () => {
       const data = await response.json();
       console.log(data.message); // This should be "Successfully logged out"
       
+      // Call onLogout to reset user state and refresh the navbar
+      onLogout();
+
       // Redirect to the login page using React Router
       navigate("/login"); // Programmatically navigate to login page
 
