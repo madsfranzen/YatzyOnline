@@ -1,1 +1,1 @@
-const BACKEND_URL = "https://yatzyonline.onrender.com";
+const BACKEND_URL = "https://yatzyonline.onrender.com/api";

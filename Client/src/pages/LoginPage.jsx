@@ -25,25 +25,24 @@ export default function LoginPage({ onLoginSuccess }) {
       }
     };
 
-    //     try {
-    //       const response = await fetch(BACKEND_URL + "/auth/login", {
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({ username, password }),
-    //       });
-
-    //       if (response.ok) {
-    //         const data = await response.json();
-    //         onLoginSuccess(data); // Pass the user data to the parent (App.js)
-    //         console.log(data);
-    //       } else {
-    //         setError("Invalid credentials");
-    //       }
-    //     } catch (err) {
-    //       setError("Error logging in");
-    //     }
+        try {
+          const response = await fetch(BACKEND_URL + "/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+          });
+			if (response.ok) {
+				const data = await response.json();
+				onLoginSuccess(data);  // Pass the user data to the parent (App.js)
+			} else {
+				setError('Invalid credentials');
+			}
+		} catch (err) {
+			setError('Error logging in');
+		}
+	};
   };
 
   return (
@@ -116,4 +115,3 @@ export default function LoginPage({ onLoginSuccess }) {
       </Box>
     </Container>
   );
-}
