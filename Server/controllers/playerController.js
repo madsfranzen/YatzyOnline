@@ -18,6 +18,29 @@ export async function createPlayer(req, res) {
   }
 }
 
+export async function validatePlayer(req, res) {
+  try {
+    const {username, password} = req.body;
+
+    const player = await Player.findOne({username});
+
+    if (!player) {
+      return res.status(404).json({error: "Player not found"})
+    }
+
+    const isPasswordValid = bcrypt.compareSync(password, player.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({error: "Invalid credentials"})
+    }
+    res.status(200).json({message: "Login Successful", player});
+  } catch (error) {
+    console.error("Error validating player: ", error);
+    res.status(500).json({message: error.message})
+  }
+  
+}
+
 export async function getPlayer(req, res) {
   try {
     const { id } = req.id;
