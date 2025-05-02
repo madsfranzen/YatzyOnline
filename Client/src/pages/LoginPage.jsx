@@ -6,41 +6,33 @@ import { login } from "../services/authService"; // Import the login function
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function LoginPage({ onLoginSuccess }) {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-	const [error, setError] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-	const handleLogin = async () => {
+  const handleLogin = async () => {
+    const result = await login(username, password); // Use the login function from authService
 
-		const handleLogin = async () => {
-			const result = await login(username, password); // Use the login function from authService
+    if (result.success) {
+      onLoginSuccess(result.data); // Pass the user data to the parent (App.js)
+      console.log(result.data);
+    } else {
+      setError(result.message); // Display error message
+    }
+  };
 
-			if (result.success) {
-				onLoginSuccess(result.data); // Pass the user data to the parent (App.js)
-			} else {
-				setError(result.message); // Display error message
-			}
-		};
+  const handleSignUp = async () => {
+    const result = await signUp(username, password); // Use the signUp function from authService
 
-		try {
-			const response = await fetch(BACKEND_URL + "/auth/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: 'include',
-				body: JSON.stringify({ username, password }),
-			});
-			if (response.ok) {
-				const data = await response.json();
-				onLoginSuccess(data);  // Pass the user data to the parent (App.js)
-			} else {
-				setError('Invalid credentials');
-			}
-		} catch (err) {
-			setError('Error logging in');
-		}
-	};
+    if (result.success) {
+      setSuccess("Signup successful! You can now log in.");
+      setError(""); // Clear any previous errors
+    } else {
+      setError(result.message); // Display error message
+      setSuccess(""); // Clear any previous success messages
+    }
+  };
 
 	return (
 		<Container
@@ -74,6 +66,7 @@ export default function LoginPage({ onLoginSuccess }) {
 
 				{/* Display error message if any */}
 				{error && <Alert severity="error">{error}</Alert>}
+				{success && <Alert severity="success">{success}</Alert>}
 
 				<passwordEncrypt />
 
@@ -100,16 +93,24 @@ export default function LoginPage({ onLoginSuccess }) {
 						fullWidth
 					/>
 
-					<Button
-						variant="contained"
-						color="primary"
-						onClick={handleLogin}
-						fullWidth
-					>
-						Login
-					</Button>
-				</Box>
-			</Box>
-		</Container>
-	);
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleLogin}
+            fullWidth
+          >
+            Login
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleSignUp}
+            fullWidth
+          >
+            Sign Up
+          </Button>
+        </Box>
+      </Box>
+    </Container>
+  );
 }
