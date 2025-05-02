@@ -26,6 +26,7 @@ export default function LobbyList() {
 			try {
 				const response = await fetch(BACKEND_URL + '/lobbies', {
 					headers: { 'Content-Type': 'application/json' },
+					credentials: "include", // Include credentials (cookies/session data)
 				});
 				const data = await response.json();
 				setLobbies(data);
