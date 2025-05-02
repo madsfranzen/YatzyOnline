@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import { Container, Box, TextField, Button, Alert } from "@mui/material";
-import { login } from "../services/authService"; // Import the login function
+import { login, signUp } from "../services/authService"; // Import the login function
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
