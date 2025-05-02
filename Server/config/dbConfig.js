@@ -8,7 +8,7 @@ const connectToDatabase = async () => {
     return mongoose.connection;
   }
 
-  const connectionStr = `${process.env.MONGODB_URI}/${process.env.MONGODB_DATABASE}`;
+  const connectionStr = `${process.env.MONGODB_URI}`;
 
   await mongoose.connect(connectionStr);
 

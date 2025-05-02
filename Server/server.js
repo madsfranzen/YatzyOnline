@@ -2,10 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import connectToDatabase from "./config/dbConfig.js";
 import playerRoutes from "./routes/playerRoutes.js";
-import session from "express-session";
-import { CheckSession } from "./middleware/auth.js";
 import authRoutes from "./routes/authRoutes.js";
+import lobbyRoutes from "./routes/lobbyRoutes.js"
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -16,6 +16,7 @@ async function startServer() {
     await connectToDatabase();
 
     app.use(express.json());
+    app.use(cookieParser())
 
     // Configure CORS to allow credentials and specific origin
     app.use(
@@ -25,19 +26,11 @@ async function startServer() {
       }),
     );
 
-    app.use(
-      session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: true,
-      }),
-    );
-
-    app.use(CheckSession);
-
-    app.use("/auth", authRoutes);
+    app.use("/api/auth", authRoutes);
 
     app.use("/api/players", playerRoutes);
+
+    app.use("/api/lobbies", lobbyRoutes)
 
     const port = process.env.SERVER_PORT;
     app.listen(port, () => {

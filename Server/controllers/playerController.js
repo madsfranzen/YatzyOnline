@@ -20,7 +20,9 @@ export async function createPlayer(req, res) {
 
 export async function getPlayer(req, res) {
   try {
-    const { id } = req.id;
+    const { id } = req.params
+
+    console.log(id);
 
     const player = await Player.findById(id);
 

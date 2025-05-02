@@ -1,26 +1,18 @@
 import Player from "../models/player.js";
+import jwt from "jsonwebtoken";
 
-export async function CheckSession(req, res, next) {
-  if (req.originalUrl === "/auth/login" || req.originalUrl === "/auth/logout") {
-    return next();
+export async function authenticateToken(req, res, next) {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ message: "No token, authorization denied" });
   }
 
-  if (req.session && req.session.userId) {
-    try {
-      const player = await Player.findById(req.session.userId);
-
-      if (!player) {
-        return res.redirect("auth/login");
-      }
-
-      req.user = player;
-      return next();
-
-    } catch (error) {
-      console.error("Error in sesison check middleware:", error);
-      return res.redirect("/auth/login");
-    }
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = user;
+    next();
+  } catch (error) {
+    return res.status(403).json({ message: "Invalid token" });
   }
-
-  return res.redirect('/auth/login')
 }
