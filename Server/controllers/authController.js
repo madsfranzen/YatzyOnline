@@ -1,4 +1,5 @@
 import Player from "../models/player.js";
+import jwt from "jsonwebtoken";
 
 export async function login(req, res) {
   const { username, password } = req.body;
@@ -6,25 +7,27 @@ export async function login(req, res) {
   try {
     const player = await Player.findOne({ username });
 
+    console.log(player)
+
     if (!player || player.password !== password) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
 
-    req.session.userId = player.id;
+    const token = jwt.sign(
+      { id: player._id, username: player.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
-    return res.status(200).json(player);
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({ message: "Login succesful" });
   } catch (error) {
     console.error("Login error: ", error);
     return res.status(500).json({ message: "Internal server error" });
   }
-}
-
-export function logout(req, res) {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).json({ message: "Failed to log out" });
-    }
-    // Respond with a JSON indicating success
-    res.json({ message: "Successfully logged out" });
-  });
 }
