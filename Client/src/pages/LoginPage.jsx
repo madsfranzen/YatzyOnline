@@ -25,6 +25,18 @@ export default function LoginPage({ onLoginSuccess }) {
       }
     };
 
+    const handleSignUp = async () => {
+      const result = await signUp(username, password); // Use the signUp function from authService
+
+      if (result.success) {
+        setSuccess("Signup successful! You can now log in.");
+        setError(""); // Clear any previous errors
+      } else {
+        setError(result.message); // Display error message
+        setSuccess(""); // Clear any previous success messages
+      }
+    };
+
     //     try {
     //       const response = await fetch(BACKEND_URL + "/auth/login", {
     //         method: "POST",
@@ -111,6 +123,22 @@ export default function LoginPage({ onLoginSuccess }) {
             fullWidth
           >
             Login
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSignIn}
+            fullWidth
+          >
+            Login
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleSignUp}
+            fullWidth
+          >
+            Sign Up
           </Button>
         </Box>
       </Box>
