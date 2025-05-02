@@ -20,7 +20,7 @@ export async function signUp(username, password) {
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   try {
-    const response = await fetch(`${BACKEND_URL}/api/players`, {
+    const response = await fetch(`${BACKEND_URL}/players`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,4 +59,3 @@ export async function login(username, password) {
     return { success: false, message: error.message };
   }
 }
-

@@ -3,8 +3,6 @@ import Typography from "@mui/material/Typography";
 import { Container, Box, TextField, Button, Alert } from "@mui/material";
 import { login, signUp } from "../services/authService"; // Import the login function
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
 export default function LoginPage({ onLoginSuccess }) {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
