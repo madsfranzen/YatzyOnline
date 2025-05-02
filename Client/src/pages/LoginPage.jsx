@@ -68,8 +68,6 @@ export default function LoginPage({ onLoginSuccess }) {
 				{error && <Alert severity="error">{error}</Alert>}
 				{success && <Alert severity="success">{success}</Alert>}
 
-				<passwordEncrypt />
-
 				<Box
 					component="form"
 					display="flex"
