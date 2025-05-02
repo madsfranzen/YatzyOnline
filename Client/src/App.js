@@ -36,7 +36,8 @@ function App() {
   return (
     <Router>
       <div>
-        <Navbar user={user} onLogout={handleLogout} /> {/* Pass handleLogout to Navbar */}
+        <Navbar user={user} onLogout={handleLogout} />{" "}
+        {/* Pass handleLogout to Navbar */}
         <Routes>
           <Route
             path="/login"
@@ -50,4 +51,3 @@ function App() {
 }
 
 export default App;
-

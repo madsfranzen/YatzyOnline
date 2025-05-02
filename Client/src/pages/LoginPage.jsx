@@ -10,9 +10,9 @@ export default function LoginPage({ onLoginSuccess }) {
 	const [error, setError] = useState('');
 
 	const handleLogin = async () => {
-		
-		// FOR TESTING
-		onLoginSuccess({name: 'Mads'})
+
+		// // FOR TESTING
+		// onLoginSuccess({name: 'Mads'})
 
 		try {
 			const response = await fetch(BACKEND_URL + '/auth/login', {
@@ -26,6 +26,7 @@ export default function LoginPage({ onLoginSuccess }) {
 			if (response.ok) {
 				const data = await response.json();
 				onLoginSuccess(data);  // Pass the user data to the parent (App.js)
+				console.log(data);
 			} else {
 				setError('Invalid credentials');
 			}
