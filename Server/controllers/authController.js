@@ -7,9 +7,10 @@ export async function login(req, res) {
   try {
     const player = await Player.findOne({ username });
 
-    console.log(player)
+    const isPasswordValid = bcrypt.compareSync(password, player.password);
 
-    if (!player || player.password !== password) {
+
+    if (!player || !isPasswordValid) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
 
