@@ -42,7 +42,7 @@ export async function logOut(_req, res) {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "None",
       secure: process.env.NODE_ENV === "production", // Make sure it's secure in production
     });
 
