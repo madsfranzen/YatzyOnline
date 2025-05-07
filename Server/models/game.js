@@ -1,8 +1,8 @@
 import mongoose from "mongoose"
-import Player from "./player.js";
 
 const gameSchema = new mongoose.Schema({
-	players: [{type: mongoose.Schema.Types.ObjectId, ref: 'Player'}],
+	players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
+	dices: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Dice' }],
 })
 
 const Game = mongoose.model("Game", gameSchema, 'Game');
