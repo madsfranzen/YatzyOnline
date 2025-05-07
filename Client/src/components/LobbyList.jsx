@@ -13,10 +13,10 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function LobbyList() {
 	const lobbiesDummy = [
-		{ id: 1, name: "Lobby 1", players: 1, maxPlayers: 5 },
-		{ id: 2, name: "Lobby 2", players: 2, maxPlayers: 10 },
-		{ id: 3, name: "Lobby 3", players: 5, maxPlayers: 5 },
-		{ id: 4, name: "Lobby 4", players: 3, maxPlayers: 5 },
+		{ _id: 1, name: "Lobby 1", players: 1, maxPlayers: 5 },
+		{ _id: 2, name: "Lobby 2", players: 2, maxPlayers: 10 },
+		{ _id: 3, name: "Lobby 3", players: 5, maxPlayers: 5 },
+		{ _id: 4, name: "Lobby 4", players: 3, maxPlayers: 5 },
 	];
 
 	const [lobbies, setLobbies] = useState(lobbiesDummy);
@@ -29,7 +29,11 @@ export default function LobbyList() {
 					credentials: "include", // Include credentials (cookies/session data)
 				});
 				const data = await response.json();
-				setLobbies(data);
+				if (Array.isArray(data.lobbies)) {
+					setLobbies(data.lobbies);
+				} else {
+					console.error("Unexpected data format:", data);
+				}
 			} catch (error) {
 				console.error("Failed to fetch lobbies", error);
 			}
@@ -58,7 +62,7 @@ export default function LobbyList() {
 						<TableBody>
 							{lobbies.map((lobby) => (
 								<TableRow
-									key={lobby.id}
+									key={lobby._id}
 									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
 									<TableCell component="th" scope="row">
 										{lobby.name}
