@@ -4,6 +4,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/ui/Navbar';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import GameWindow from '@/components/ui/GameWindow';
+import { Card } from "@/components/ui/card";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -51,16 +55,36 @@ export default function LobbyClient({ lobbyID }) {
 	}, [lobbyID, router]);
 
 	if (loading || !lobbyData) {
-		return <div className="p-4 text-gray-500">Loading lobby...</div>;
+		return (
+			<div className="min-h-screen bg-gray-50">
+				<Navbar username={username} />
+				<div className="h-[75vh] flex items-center justify-center text-gray-500 text-xl">
+					<Card className={"p-8"}>
+						Loading lobby...
+					</Card>
+				</div>
+			</div>
+		);
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-50">
+		<div className="min-h-screen bg-gray-50 flex flex-col">
 			<Navbar username={username} />
-			<div className="p-4">
-				<h1 className="text-2xl font-bold">Lobby: {lobbyData.lobbyName}</h1>
-				<p>Lobby ID: {lobbyID}</p>
-				{/* Add additional lobby/game content here */}
+
+			<div className="flex-grow p-4">
+				<GameWindow></GameWindow>
+
+			</div>
+
+			{/* This will be snapped to the bottom of the screen */}
+			<div className="p-4 flex justify-between items-center fixed bottom-0 w-full bg-gray-50">
+				<Link href={'/'}>
+					<Button>Leave Game</Button>
+				</Link>
+				<div className="text-right">
+					<h1 className="text-2xl font-bold">Lobby: {lobbyData.lobbyName}</h1>
+					<p>Lobby ID: {lobbyID}</p>
+				</div>
 			</div>
 		</div>
 	);
