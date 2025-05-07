@@ -29,8 +29,8 @@ export default function LobbyList() {
 					credentials: "include", // Include credentials (cookies/session data)
 				});
 				const data = await response.json();
-				if (Array.isArray(data.lobbies)) {
-					setLobbies(data.lobbies);
+				if (Array.isArray(data)) {
+					setLobbies(data);
 				} else {
 					console.error("Unexpected data format:", data);
 				}
@@ -65,9 +65,9 @@ export default function LobbyList() {
 									key={lobby._id}
 									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
 									<TableCell component="th" scope="row">
-										{lobby.name}
+										{lobby.lobbyName}
 									</TableCell>
-									<TableCell align="right">{lobby.players}/{lobby.maxPlayers}</TableCell>
+									<TableCell align="right">{"PLAYER MAX"}/{lobby.playerMax}</TableCell>
 									<TableCell align="right">
 										<JoinButton />
 									</TableCell>
