@@ -1,20 +1,17 @@
-"use server";
-import { cookies } from "next/headers"; // if needed for auth
+"use client";
 
 export async function Login(prevState, formData) {
   const username = formData.get("username");
   const password = formData.get("password");
 
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ username, password }),
-      }
-    );
+    const res = await fetch(BACKEND_URL + "/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+      credentials: "include",
+    });
 
     if (!res.ok) {
       // const errorText = await res.text();
@@ -31,4 +28,3 @@ export async function Login(prevState, formData) {
     return { error: "Unexpected error. Please try again." };
   }
 }
-

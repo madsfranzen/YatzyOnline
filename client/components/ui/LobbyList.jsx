@@ -7,7 +7,7 @@ import JoinButton from './JoinButton'
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
-export default function LobbyListPage() {
+export default function LobbyList({ username }) {
 	const [lobbies, setLobbies] = useState([])
 
 	useEffect(() => {
@@ -45,7 +45,7 @@ export default function LobbyListPage() {
 								</p>
 							</div>
 							<div className="flex justify-center mt-2">
-								<JoinButton onClick={() => joinGame(lobby._id)} />
+								<JoinButton onClick={() => joinGame(lobby._id)} disabled={!username} />
 							</div>
 						</CardContent>
 					</Card>
