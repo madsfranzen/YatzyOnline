@@ -27,7 +27,7 @@ export async function login(req, res) {
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "None", // "lax" is fine for dev across localhost ports
-      secure: process.env.NODE_ENV === "production", // Make sure it's secure in production
+      secure: "Secure",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
