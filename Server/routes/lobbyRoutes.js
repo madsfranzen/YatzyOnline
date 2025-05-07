@@ -4,7 +4,7 @@ import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('', authenticateToken, getLobbies);
+router.get('', getLobbies);
 
 export default router;
 

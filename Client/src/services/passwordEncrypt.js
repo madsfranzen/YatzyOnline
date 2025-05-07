@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import bcrypt from 'bcryptjs';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -21,7 +20,7 @@ const passwordEncrypt = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username: userName, password: password }),
+                body: JSON.stringify({ username: userName, password }),
             });
 
             if (response.ok) {

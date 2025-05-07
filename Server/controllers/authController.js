@@ -1,5 +1,6 @@
 import Player from "../models/player.js";
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcryptjs'
 
 export async function login(req, res) {
   const { username, password } = req.body;
@@ -8,7 +9,6 @@ export async function login(req, res) {
     const player = await Player.findOne({ username });
 
     const isPasswordValid = bcrypt.compareSync(password, player.password);
-
 
     if (!player || !isPasswordValid) {
       return res.status(401).json({ message: "Invalid username or password" });
