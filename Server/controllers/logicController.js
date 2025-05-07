@@ -1,14 +1,8 @@
-
-
 export async function getValues(req, res) {
-    try {
+  try {
+    console.log(req.user);
 
-        console.log(req.user);
-
-        res.status(200).json({ message: "Values retrieved successfully" });
-        
-    } catch (error) {
-        
-    }
-
+    res.status(200).json({ message: "Values retrieved successfully" });
+  } catch (error) {}
 }
+
