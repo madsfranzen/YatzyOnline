@@ -4,8 +4,10 @@ import connectToDatabase from "./config/dbConfig.js";
 import playerRoutes from "./routes/playerRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import lobbyRoutes from "./routes/lobbyRoutes.js"
+import logicRoutes from "./routes/logicRoutes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { authenticateToken } from "./middleware/auth.js";
 
 dotenv.config();
 
@@ -31,6 +33,8 @@ async function startServer() {
     app.use("/api/players", playerRoutes);
 
     app.use("/api/lobbies", lobbyRoutes)
+
+    app.use("/api/logic", authenticateToken, logicRoutes)
 
     const port = process.env.SERVER_PORT;
     app.listen(port, () => {
