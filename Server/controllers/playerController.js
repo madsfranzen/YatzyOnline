@@ -1,12 +1,15 @@
 import Player from "../models/player.js";
+import bcrypt from "bcryptjs";
 
 export async function createPlayer(req, res) {
   try {
     const { username, password } = req.body;
 
+     const hashedPassword = bcrypt.hashSync(password, 10);
+
     const player = new Player({
       username,
-      password,
+      password: hashedPassword,
     });
 
     await player.save();
