@@ -33,7 +33,7 @@ export default function LobbyListPage() {
 
 	return (
 		<div className="min-h-screen p-4">
-			<h1 className="text-2xl font-bold mb-4 text-center">Available Lobbies</h1>
+			<h1 className="text-2xl font-bold mb-10 text-center">Available Lobbies</h1>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
 				{lobbies.map((lobby) => (
 					<Card key={lobby._id}>
