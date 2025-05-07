@@ -25,7 +25,7 @@ async function startServer() {
         origin: [
           "http://localhost:3000",
           "https://yatzyonline-client.onrender.com",
-          "https://yatzy-online.vercel.app/",
+          "https://yatzy-online.vercel.app",
         ], // List of allowed origins
         credentials: true, // Allow credentials (cookies, auth tokens, etc.)
       }),
