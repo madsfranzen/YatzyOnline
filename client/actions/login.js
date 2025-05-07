@@ -1,27 +1,34 @@
 "use server";
+import { cookies } from "next/headers"; // if needed for auth
 
-export async function Login(formData) {
+export async function Login(prevState, formData) {
+  const username = formData.get("username");
+  const password = formData.get("password");
 
-    const username = formData.get("username");
-    const password = formData.get("password");
-
-    console.log("Login function called with username:", username, "and password:", password);
-
-    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+      {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username, password }),
-    });
+      }
+    );
 
-    
     if (!res.ok) {
-        throw new Error("Failed to login");
+      // const errorText = await res.text();
+      return { error: "Invalid username or password." };
     }
-    
-    const data = await res.json();
 
-    console.log("Login response data:", data);
-    return data;
+    // const data = await res.json();
+
+    // Store token/cookies if needed here (using cookies().set(...))
+
+    return { success: true };
+  } catch (err) {
+    console.error("Login error:", err);
+    return { error: "Unexpected error. Please try again." };
+  }
 }
+

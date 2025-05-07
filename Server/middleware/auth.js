@@ -1,4 +1,3 @@
-import Player from "../models/player.js";
 import jwt from "jsonwebtoken";
 
 export async function authenticateToken(req, res, next) {
