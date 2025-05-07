@@ -12,7 +12,7 @@ const passwordEncrypt = () => {
         const userName = userNameRef.current.value;
         const password = passwordRef.current.value;
 
-        const hashedPassword = bcrypt.hashSync(password, 10);
+     
 
         try {
             // Save user to the database
@@ -21,7 +21,7 @@ const passwordEncrypt = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username: userName, password: hashedPassword }),
+                body: JSON.stringify({ username: userName, password: password }),
             });
 
             if (response.ok) {
