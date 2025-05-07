@@ -20,7 +20,6 @@ async function startServer() {
     app.use(express.json());
     app.use(cookieParser());
 
-    // Configure CORS to allow credentials and specific origin
     app.use(
       cors({
         origin: [
