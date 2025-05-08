@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { joinGame } from '@/actions/joinGame'
 import JoinButton from './JoinButton'
+import { Button } from './button'
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
@@ -45,7 +46,9 @@ export default function LobbyList({ username }) {
 								</p>
 							</div>
 							<div className="flex justify-center mt-2">
-								<JoinButton onClick={() => joinGame(lobby._id)} disabled={!username} />
+								{lobby.playerCount === lobby.playerMax ? <Button disabled>Lobby Full</Button> :
+									<JoinButton onClick={() => joinGame(lobby)} disabled={!username} />
+								}
 							</div>
 						</CardContent>
 					</Card>

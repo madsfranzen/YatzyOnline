@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import GameWindow from '@/components/ui/GameWindow';
 import { Card } from "@/components/ui/card";
+import { leaveGame } from '@/actions/leaveGame';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -79,7 +80,7 @@ export default function LobbyClient({ lobbyID }) {
 			{/* This will be snapped to the bottom of the screen */}
 			<div className="p-4 flex justify-between items-center fixed bottom-0 w-full bg-gray-50">
 				<Link href={'/'}>
-					<Button>Leave Game</Button>
+					<Button onClick={() => leaveGame(lobbyData._id)}>Leave Game</Button>
 				</Link>
 				<div className="text-right">
 					<h1 className="text-2xl font-bold">Lobby: {lobbyData.lobbyName}</h1>

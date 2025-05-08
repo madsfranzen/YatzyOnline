@@ -26,8 +26,8 @@ export async function login(req, res) {
 
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "None", // "lax" is fine for dev across localhost ports
-      secure: process.env.NODE_ENV === "production", // Make sure it's secure in production
+      sameSite: "lax", // WARNING: MUST BE SET TO "lax" when running localhost, and "None" when running production 
+      secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -41,9 +41,9 @@ export async function login(req, res) {
 export async function logOut(_req, res) {
   try {
     res.clearCookie("token", {
-      httpOnly: true,
-      sameSite: "None",
-      secure: process.env.NODE_ENV === "production", // Make sure it's secure in production
+      httpOnly: false,
+      sameSite: "lax", // WARNING: MUST BE SET TO "lax" when running localhost, and "None" when running production 
+      secure: process.env.NODE_ENV === "production",
     });
 
     res.status(200).json({ message: "Logged out successfully" });

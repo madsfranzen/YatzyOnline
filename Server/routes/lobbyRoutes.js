@@ -1,13 +1,22 @@
-import express from 'express'
-import { getLobbies, createLobby, getLobbyByID } from '../controllers/lobbyController.js';
+import express from "express";
+import {
+  getLobbies,
+  createLobby,
+  getLobbyByID,
+  joinLobby,
+  leaveLobby,
+} from "../controllers/lobbyController.js";
 
 const router = express.Router();
 
-router.get('', getLobbies);
+router.get("", getLobbies);
 
-router.get('/:lobbyID', getLobbyByID);
+router.post("", createLobby);
 
-router.post('', createLobby);
+router.get("/:lobbyID", getLobbyByID);
+
+router.post("/:lobbyid", joinLobby);
+
+router.delete("/:lobbyid", leaveLobby);
 
 export default router;
-

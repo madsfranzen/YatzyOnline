@@ -45,7 +45,64 @@ export async function createLobby(req, res) {
 
     res.status(201).json(lobby);
   } catch (error) {
-    console.error("Error creating lobby: ", error);
     res.status(500).json({ message: error });
+  }
+}
+
+export async function joinLobby(req, res) {
+  try {
+    const { lobbyId } = req.body;
+
+    // Find the lobby first
+    const lobby = await Lobby.findById(lobbyId);
+    if (!lobby) {
+      return res.status(404).json({ message: "Lobby not found." });
+    }
+
+    // Check if lobby is full
+    if (lobby.playerCount < lobby.playerMax) {
+      const updatedLobby = await Lobby.findByIdAndUpdate(
+        lobbyId,
+        { $inc: { playerCount: 1 } },
+        { new: true },
+      );
+
+      return res
+        .status(200)
+        .json({ message: "Successfully joined lobby.", lobby: updatedLobby });
+    } else {
+      return res.status(400).json({ message: "Lobby is full." });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+export async function leaveLobby(req, res) {
+  try {
+    const { lobbyId } = req.body;
+
+    // Find the lobby first
+    const lobby = await Lobby.findById(lobbyId);
+    if (!lobby) {
+      return res.status(404).json({ message: "Lobby not found." });
+    }
+
+    // Check if lobby is empty
+    if (lobby.playerCount != 0) {
+      const updatedLobby = await Lobby.findByIdAndUpdate(
+        lobbyId,
+        { $inc: { playerCount: -1 } },
+        { new: true },
+      );
+
+      return res
+        .status(200)
+        .json({ message: "Successfully left lobby.", lobby: updatedLobby });
+    } else {
+      return res.status(400).json({ message: "Lobby is empty." });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error." });
   }
 }
