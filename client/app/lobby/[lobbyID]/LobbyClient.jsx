@@ -78,7 +78,7 @@ export default function LobbyClient({ lobbyID }) {
 			</div>
 
 			{/* This will be snapped to the bottom of the screen */}
-			<div className="p-4 flex justify-between items-center fixed bottom-0 w-full bg-gray-50">
+			<div className="select-none p-4 flex justify-between items-center fixed bottom-0 w-full bg-none">
 				<Link href={'/'}>
 					<Button onClick={() => leaveGame(lobbyData._id)}>Leave Game</Button>
 				</Link>
