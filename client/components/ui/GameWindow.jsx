@@ -25,11 +25,11 @@ export default function GameWindow() {
 					}}
 				>
 					{/* Header */}
-					<div className="font-semibold border border-gray-300 p-2 bg-gray-100">Navn</div>
+					<div className="font-semibold border border-gray-300 p-2 bg-gray-100">Name</div>
 					{[...Array(playerCount)].map((_, idx) => (
 						<div key={`player-${idx}`} className="border border-gray-300 p-2 font-semibold text-center bg-gray-100">
 							{/* Playername goes here */}
-							Spiller {idx + 1}
+							Player {idx + 1}
 						</div>
 					))}
 
