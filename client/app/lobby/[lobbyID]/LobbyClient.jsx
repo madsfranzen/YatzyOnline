@@ -7,7 +7,6 @@ import Navbar from '@/components/ui/Navbar';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import GameWindow from '@/components/ui/GameWindow';
-import { Card } from "@/components/ui/card";
 import { leaveGame } from '@/actions/leaveGame';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -59,10 +58,8 @@ export default function LobbyClient({ lobbyID }) {
 		return (
 			<div className="min-h-screen bg-gray-50">
 				<Navbar username={username} />
-				<div className="h-[75vh] flex items-center justify-center text-gray-500 text-xl">
-					<Card className={"p-8"}>
-						Loading lobby...
-					</Card>
+				<div className="flex justify-center items-center h-60">
+					<div className="animate-spin rounded-full h-15 w-15 border-t-4 border-b-4 border-black-800"></div>
 				</div>
 			</div>
 		);
@@ -79,9 +76,21 @@ export default function LobbyClient({ lobbyID }) {
 
 			{/* This will be snapped to the bottom of the screen */}
 			<div className="select-none p-4 flex justify-between items-center fixed bottom-0 w-full bg-none">
-				<Link href={'/'}>
-					<Button onClick={() => leaveGame(lobbyData._id)}>Leave Game</Button>
-				</Link>
+				<Button
+					onClick={async () => {
+						const confirmLeave = window.confirm("Are you sure you want to leave the game?");
+						if (!confirmLeave) return;
+
+						const result = await leaveGame(lobbyData._id);
+						if (result?.success) {
+							router.push('/');
+						} else {
+							console.error("Failed to leave game:", result?.error);
+						}
+					}}
+				>
+					Leave Game
+				</Button>
 				<div className="text-right">
 					<h1 className="text-2xl font-bold">Lobby: {lobbyData.lobbyName}</h1>
 					<p>Lobby ID: {lobbyID}</p>

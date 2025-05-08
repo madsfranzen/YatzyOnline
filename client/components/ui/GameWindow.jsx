@@ -46,7 +46,7 @@ export default function GameWindow() {
 							<React.Fragment key={`row-${idx}`}>
 								<div className={labelCellClass}>{cat}</div>
 								{[...Array(playerCount)].map((_, i) => {
-									const valueCellClass = `border border-gray-300 p-2 text-center ${highlight ? "bg-gray-100 font-semibold" : "transition-colors hover:bg-blue-100"
+									const valueCellClass = `border border-gray-300 p-2 text-center ${highlight ? "bg-gray-100 font-semibold" : " hover:bg-blue-100"
 										}`;
 									return (
 										<div key={`cell-${idx}-${i}`} className={valueCellClass}>
