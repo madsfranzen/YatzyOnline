@@ -107,7 +107,7 @@ export async function leaveLobby(req, res) {
       return res.status(404).json({ message: "Lobby not found." });
     }
 
-    const isInLobby = lobby.players.some((p) => p === player._id);
+    const isInLobby = lobby.players.some((p) => p._id.toString() === player.id.toString());
     if (!isInLobby) {
       return res.status(400).json({ message: "Player not in this lobby." });
     }
