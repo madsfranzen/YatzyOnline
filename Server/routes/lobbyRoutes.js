@@ -15,7 +15,7 @@ router.post("", createLobby);
 
 router.get("/:lobbyID", getLobbyByID);
 
-router.post("/:lobbyid", joinLobby);
+router.post("/:lobbyId", joinLobby);
 
 router.delete("/:lobbyid", leaveLobby);
 
