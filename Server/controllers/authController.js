@@ -1,6 +1,7 @@
 import Player from "../models/player.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { createPlayer } from "./playerController.js";
 
 export async function login(req, res) {
   const { username, password } = req.body;
@@ -37,6 +38,25 @@ export async function login(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+
+export async function signUp(req, res) {
+  const { username } = req.body;
+
+  try {
+    // Check if the user already exists
+    const existingPlayer = await Player.findOne({ username });
+    if (existingPlayer) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // Call createPlayer to handle user creation and password hashing
+    await createPlayer(req, res);
+  } catch (error) {
+    console.error("Signup error: ", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 
 export async function logOut(_req, res) {
   try {
