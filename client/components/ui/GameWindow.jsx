@@ -82,7 +82,7 @@ export default function GameWindow({ lobbyID }) {
 						return (
 							<React.Fragment key={`row-${idx}`}>
 								<div className={labelCellClass}>{cat}</div>
-								{[...Array(playerCount)].map((_, i) => {
+								{[gameState.players].map((_, i) => {
 									const valueCellClass = `border border-gray-300 p-2 text-center ${highlight ? "bg-gray-100 font-semibold" : " hover:bg-blue-100"}`;
 									return (
 										<div onClick={(e) => handleCellClick(e)} key={`cell-${idx}-${i}`} className={valueCellClass}>
