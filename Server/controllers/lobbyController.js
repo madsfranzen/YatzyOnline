@@ -99,21 +99,21 @@ export async function leaveLobby(req, res) {
   try {
     const { lobbyId } = req.body;
 
-    const player = req.user;
+    const user = req.user;
 
     const lobby = await Lobby.findById(lobbyId);
     if (!lobby) {
       return res.status(404).json({ message: "Lobby not found." });
     }
 
-    const isInLobby = lobby.players.some((p) => p._id.toString() === player.id.toString());
+    const isInLobby = lobby.players.some((p) => p._id.toString() === user.id.toString());
     if (!isInLobby) {
       return res.status(400).json({ message: "Player not in this lobby." });
     }
 
     const updatedLobby = await Lobby.findByIdAndUpdate(
       lobbyId,
-      { $pull: { players: player._id } },
+      { $pull: { players: user.id } },
       { new: true }
     );
 
