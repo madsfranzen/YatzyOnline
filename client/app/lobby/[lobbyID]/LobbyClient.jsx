@@ -69,8 +69,8 @@ export default function LobbyClient({ lobbyID }) {
 			<Navbar username={username} />
 
 			<div className="flex-grow p-4">
+				<Button>START GAME</Button>
 				<GameWindow></GameWindow>
-
 			</div>
 
 			{/* This will be snapped to the bottom of the screen */}
