@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 
-export async function joinGame(lobby) {
+export async function joinLobby(lobby) {
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   if (lobby.playerMax === lobby.playerCount) {

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
-import { joinGame } from '@/actions/joinGame'
+import { joinLobby } from '@/actions/joinGame'
 import JoinButton from './JoinButton'
 import { Button } from './button'
 
@@ -76,7 +76,7 @@ export default function LobbyList({ username }) {
 										{lobby.playerCount === lobby.playerMax ? (
 											<Button disabled>Lobby Full</Button>
 										) : (
-											<JoinButton onClick={() => joinGame(lobby)} disabled={!username} />
+											<JoinButton onClick={() => joinLobby(lobby)} disabled={!username} />
 										)}
 									</div>
 								</CardContent>

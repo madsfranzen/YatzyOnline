@@ -63,6 +63,7 @@ export default function LobbyClient({ lobbyID }) {
 			</div>
 		);
 	}
+	
 
 	return (
 		<div className="min-h-screen bg-gray-50 flex flex-col">

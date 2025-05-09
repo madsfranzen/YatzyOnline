@@ -1,3 +1,6 @@
+import Game from "../models/game.js";
+import Lobby from "../models/lobby.js";
+
 export async function getValues(req, res) {
   try {
     console.log(req.user);
@@ -6,6 +9,7 @@ export async function getValues(req, res) {
   } catch (error) {}
 }
 
+<<<<<<< Updated upstream
 export async function holdDice(req, res) {
   try {
     console.log(req.user);
@@ -31,3 +35,29 @@ export async function holdResult(req, res) {
 }
 
  
+=======
+export async function throwDice(req, res) {
+  try {
+    const player = req.user;
+
+    const lobbyId = req.body;
+
+    const players = await Lobby.findById(lobbyId).populate('game').populate('players');
+
+    console.log(players)
+
+    res.status(200).json({ players})
+    
+
+
+    throwDice = () => {
+      this.throwCount++;
+      for (let i = 0; i < this.values.length; i++) {
+        if (!this.holdStatus[i]) {
+          this.values[i] = Math.floor(Math.random() * 6) + 1;
+        }
+      }
+    };
+  } catch (error) {}
+}
+>>>>>>> Stashed changes

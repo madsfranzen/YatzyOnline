@@ -1,3 +1,5 @@
+import Dice from "../Dice";
+import { Button } from "./button";
 import { Card } from "./card";
 import React from "react";
 
@@ -15,8 +17,31 @@ const categories = [
 const playerCount = 8;
 
 export default function GameWindow() {
+
+	
+	async function handleCellClick(e) {
+
+		
+
+	}
+
+	
+
+
 	return (
 		<div className="select-none h-[90vh] flex items-center justify-center">
+			
+			<Card className="p-4 w-fit max-h-[93vh] overflow-auto">
+
+				{[...Array(6)].map((_, index) => (
+					<Dice nr={index + 1} key={index} />
+				))}
+
+				<Button>
+					ROLL
+				</Button>
+			</Card>
+
 			<Card className="p-4 w-fit max-h-[93vh] overflow-auto">
 				<div
 					className={`grid border border-gray-300 text-sm`}
@@ -49,7 +74,7 @@ export default function GameWindow() {
 									const valueCellClass = `border border-gray-300 p-2 text-center ${highlight ? "bg-gray-100 font-semibold" : " hover:bg-blue-100"
 										}`;
 									return (
-										<div key={`cell-${idx}-${i}`} className={valueCellClass}>
+										<div onClick={(e) => handleCellClick(e)} key={`cell-${idx}-${i}`} className={valueCellClass}>
 											{/* Input or value goes here */}
 										</div>
 									);
