@@ -5,6 +5,7 @@ import playerRoutes from "./routes/playerRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import lobbyRoutes from "./routes/lobbyRoutes.js";
 import logicRoutes from "./routes/logicRoutes.js";
+import gameRoutes from "./routes/gameRoutes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { authenticateToken } from "./middleware/auth.js";
@@ -34,6 +35,8 @@ async function startServer() {
     app.use("/api/auth", authRoutes);
 
     app.use("/api/players", playerRoutes);
+
+    app.use("/api/game", authenticateToken, gameRoutes);
 
     app.use("/api/lobbies", authenticateToken, lobbyRoutes);
 

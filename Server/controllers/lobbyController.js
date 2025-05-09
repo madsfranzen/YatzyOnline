@@ -63,6 +63,8 @@ export async function joinLobby(req, res) {
     // Find the lobby
     const lobby = await Lobby.findById(lobbyId);
 
+		console.log(lobby)
+
     if (!lobby) {
       return res.status(404).json({ message: "Lobby not found." });
     }

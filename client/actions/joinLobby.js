@@ -14,7 +14,6 @@ export async function joinLobby(lobby) {
   } else {
     const res = await fetch(BACKEND_URL + "/lobbies/" + lobby._id, {
       method: "POST",
-      body: JSON.stringify({ lobbyId: lobby._id }),
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
