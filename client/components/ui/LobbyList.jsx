@@ -69,11 +69,11 @@ export default function LobbyList({ username }) {
 									<div className='p-2'>
 										<h2 className="text-lg font-semibold">{lobby.lobbyName}</h2>
 										<p className="text-sm text-muted-foreground">
-											{lobby.playerCount}/{lobby.playerMax} players
+											{lobby.players.length}/{lobby.playerMax} players
 										</p>
 									</div>
 									<div className="flex justify-center mt-2">
-										{lobby.playerCount === lobby.playerMax ? (
+										{lobby.players.length === lobby.playerMax ? (
 											<Button disabled>Lobby Full</Button>
 										) : (
 											<JoinButton onClick={() => joinLobby(lobby)} disabled={!username} />

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 export async function joinLobby(lobby) {
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-  if (lobby.playerMax === lobby.playerCount) {
+  if (lobby.playerMax === lobby.players.length) {
     // not allowed to join full lobby
 
     // TODO: Unless user is already in lobby? This is a big part of error handling.

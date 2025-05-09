@@ -69,7 +69,7 @@ export default function GameWindow({ lobbyID }) {
 			<Card className="p-4 w-fit max-h-[93vh] overflow-auto">
 				<div className={`grid border border-gray-300 text-sm`} style={{ gridTemplateColumns: `200px repeat(${playerCount}, 100px)` }}>
 					<div className="font-semibold border border-gray-300 p-2 bg-gray-100">Name</div>
-					{[...Array(playerCount)].map((_, idx) => (
+					{[gameState.players].map((_, idx) => (
 						<div key={`player-${idx}`} className="border border-gray-300 p-2 font-semibold text-center bg-gray-100">
 							Player {idx + 1}
 						</div>
