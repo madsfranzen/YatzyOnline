@@ -5,6 +5,7 @@ const gameSchema = new mongoose.Schema({
   players: [
     {
       player: { type: mongoose.Schema.Types.ObjectId, ref: "Player" },
+		isTurn: {type : Boolean, default: false},
       scoreboard: {
         ones: {
           value: { type: Number, default: 0 },

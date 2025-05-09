@@ -15,8 +15,8 @@ const categories = [
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function GameWindow({ lobbyID }) {
-	const [gameState, setGameState] = useState(null); // This could include dice, scores, etc.
-	const [playersInLobby, setPlayersInLobby] = useState(null); // This could include dice, scores, etc.
+	const [gameState, setGameState] = useState(null); // This is used for actaul game (loaded from game)
+	const [playersInLobby, setPlayersInLobby] = useState(null); // This is only used for waiting screen (loaded from lobby)
 
 	useEffect(() => {
 		let active = true;
@@ -54,7 +54,6 @@ export default function GameWindow({ lobbyID }) {
 					// Only log actual network errors or bugs
 					console.error("Polling failed", err);
 				}
-
 				await new Promise(resolve => setTimeout(resolve, 1000));
 			}
 		}

@@ -18,9 +18,10 @@ export async function createGame(req, res) {
     }
 
     // Prepare players for the game
-    const playersWithScoreboards = lobby.players.map((p) => ({
+    const playersWithScoreboards = lobby.players.map((p, index) => ({
       player: p._id,
       scoreboard: {}, // or your detailed scoreboard structure
+      isTurn: index === 0, // true for the first player, false for others
     }));
 
     // Create game
@@ -30,16 +31,19 @@ export async function createGame(req, res) {
       throwCount: 0,
     });
 
+    // SET FIRST PLAYER isTurn TO TRUE HERE
+
     await newGame.save();
 
     // Set game reference in the lobby
     lobby.game = newGame._id;
     await lobby.save();
 
-    return res.status(201).json({ message: "Game created successfully.", game: newGame });
+    return res
+      .status(201)
+      .json({ message: "Game created successfully.", game: newGame });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error." });
   }
 }
-
