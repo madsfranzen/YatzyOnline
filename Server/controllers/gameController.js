@@ -2,32 +2,28 @@ import Lobby from "../models/lobby.js";
 import Game from "../models/game.js";
 
 export async function createGame(req, res) {
-	console.log("CREATE GAME CALLED")
+  console.log("CREATE GAME CALLED");
+
   try {
     const { lobbyId } = req.body;
 
-    // Populate the players' usernames explicitly
-    const lobby = await Lobby.findById(lobbyId)
-      .populate({
-        path: "players",
-        select: "username",  // Ensures that username is populated
-        model: "Player",     // Ensures correct model is populated
-      });
-
-    console.log("Populated lobby:", lobby); // Log the populated lobby
+    const lobby = await Lobby.findById(lobbyId).populate({
+      path: "players",
+      select: "username",
+      model: "Player",
+    });
 
     if (!lobby) {
       return res.status(404).json({ message: "Lobby not found." });
     }
 
-    // Map players with their scoreboards and usernames
+    // Prepare players for the game
     const playersWithScoreboards = lobby.players.map((p) => ({
       player: p._id,
-      username: p.username,  // Should now have username populated
-      scoreboard: {},
+      scoreboard: {}, // or your detailed scoreboard structure
     }));
 
-    // Create a new game with players' usernames
+    // Create game
     const newGame = new Game({
       lobby: lobby._id,
       players: playersWithScoreboards,
@@ -35,6 +31,10 @@ export async function createGame(req, res) {
     });
 
     await newGame.save();
+
+    // Set game reference in the lobby
+    lobby.game = newGame._id;
+    await lobby.save();
 
     return res.status(201).json({ message: "Game created successfully.", game: newGame });
   } catch (error) {

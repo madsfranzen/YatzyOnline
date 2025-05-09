@@ -4,7 +4,7 @@ const lobbySchema = new mongoose.Schema({
 	lobbyName: {type: String, required: true},
 	playerMax: {type: Number, required: true},
 	players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player'}],
-	game: {type: mongoose.Schema.Types.ObjectId, ref: 'Game'},
+	game: {type: mongoose.Schema.Types.ObjectId, ref: 'Game', required: false},
 });
 
 const Lobby = mongoose.model("Lobby", lobbySchema, 'Lobby');

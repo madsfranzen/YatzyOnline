@@ -5,12 +5,11 @@ export async function getLobbyByID(req, res) {
   try {
     const { lobbyID } = req.params;
 
-    const lobby = await Lobby.findById(lobbyID)
-      .populate({
-        path: "players",
-        select: "username",  // Ensures that username is populated
-        model: "Player",     // Ensures correct model is populated
-			});
+    const lobby = await Lobby.findById(lobbyID).populate({
+      path: "players",
+      select: "username", // Ensures that username is populated
+      model: "Player", // Ensures correct model is populated
+    });
 
     if (!lobby) {
       return res.status(404).json({ message: "No lobby found" });
@@ -81,7 +80,7 @@ export async function joinLobby(req, res) {
       const updatedLobby = await Lobby.findByIdAndUpdate(
         lobbyId,
         { $push: { players: user.id } },
-        { new: true }
+        { new: true },
       );
 
       return res
@@ -98,7 +97,6 @@ export async function joinLobby(req, res) {
 export async function leaveLobby(req, res) {
   try {
     const { lobbyId } = req.body;
-
     const user = req.user;
 
     const lobby = await Lobby.findById(lobbyId);
@@ -106,20 +104,38 @@ export async function leaveLobby(req, res) {
       return res.status(404).json({ message: "Lobby not found." });
     }
 
-    const isInLobby = lobby.players.some((p) => p._id.toString() === user.id.toString());
+    const isInLobby = lobby.players.some(
+      (p) => p._id.toString() === user.id.toString(),
+    );
     if (!isInLobby) {
       return res.status(400).json({ message: "Player not in this lobby." });
     }
 
+    // Remove the player
     const updatedLobby = await Lobby.findByIdAndUpdate(
       lobbyId,
       { $pull: { players: user.id } },
-      { new: true }
+      { new: true },
     );
 
-    return res
-      .status(200)
-      .json({ message: "Successfully left lobby.", lobby: updatedLobby });
+    // If no players are left, clear the game and remove the lobby reference in the game
+    if (updatedLobby.players.length === 0 && updatedLobby.game) {
+      // Remove the reference from the Game document
+      const game = await Game.findById(updatedLobby.game);
+      if (game) {
+        game.lobby = null; // Remove the lobby reference in the game
+        await game.save();
+      }
+
+      // Nullify the game reference in the lobby
+      updatedLobby.game = null;
+      await updatedLobby.save();
+    }
+
+    return res.status(200).json({
+      message: "Successfully left lobby.",
+      lobby: updatedLobby,
+    });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error." });
   }

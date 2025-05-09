@@ -26,32 +26,39 @@ export default function GameWindow({ lobbyID }) {
 				try {
 					const res = await fetch(`${BACKEND_URL}/logic/lobby/${lobbyID}/gameState`, {
 						method: "GET",
-						credentials: "include", // required for cookie auth
+						credentials: "include",
 						headers: { "Content-Type": "application/json" }
 					});
 
-					if (res.ok) {
+					if (res.status === 200) {
 						const data = await res.json();
-						setGameState(data.game); // Update state with new game data
-					} else {
-						console.log("GAME NOT STARTED YET")
-						const res = await fetch(`${BACKEND_URL}/lobbies/${lobbyID}`, {
+						console.log("GETTING GAME SUCCESS")
+						console.log(data)
+						setGameState(data.game);
+					} else if (res.status === 404) {
+						// Game hasn't started yet — no need to log
+						const lobbyRes = await fetch(`${BACKEND_URL}/lobbies/${lobbyID}`, {
 							method: "GET",
-							credentials: "include", // required for cookie auth
+							credentials: "include",
 							headers: { "Content-Type": "application/json" }
 						});
-						if (res.ok) {
-							const data = await res.json();
-							setPlayersInLobby(data.players)
+						if (lobbyRes.ok) {
+							const data = await lobbyRes.json();
+							setPlayersInLobby(data.players);
 						}
+					} else {
+						// Unexpected response — only now we log
+						console.error(`Unexpected response: ${res.status}`);
 					}
-
 				} catch (err) {
+					// Only log actual network errors or bugs
 					console.error("Polling failed", err);
 				}
-				await new Promise(resolve => setTimeout(resolve, 1000)); // wait before next request
+
+				await new Promise(resolve => setTimeout(resolve, 1000));
 			}
 		}
+
 
 		poll();
 
