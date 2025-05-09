@@ -5,7 +5,7 @@ const gameSchema = new mongoose.Schema({
   players: [
     {
       player: { type: mongoose.Schema.Types.ObjectId, ref: "Player" },
-		isTurn: {type : Boolean, default: false},
+      isTurn: { type: Boolean, default: false },
       scoreboard: {
         ones: {
           value: { type: Number, default: 0 },
@@ -82,7 +82,16 @@ const gameSchema = new mongoose.Schema({
       },
     },
   ],
-  throwCount: {type: Number, default: 0},
+  throwCount: { type: Number, default: 0 },
+  diceValues: {
+    type: [Number],
+    default: [6, 5, 4, 3, 2, 1], // initial dice values
+  },
+
+  diceHolds: {
+    type: [Boolean],
+    default: [false, false, false, false, false, false], // none held initially
+  },
 });
 
 const Game = mongoose.model("Game", gameSchema, "Game");

@@ -70,6 +70,10 @@ export default function GameWindow({ lobbyID }) {
 		// Send updates to the server here
 	}
 
+	async function handleRollClick(_e) {
+		console.log("ROLL")
+	}
+
 	async function startGame() {
 		await fetch(`${BACKEND_URL}/game`, {
 			method: "POST",
@@ -96,53 +100,54 @@ export default function GameWindow({ lobbyID }) {
 				<Button onClick={startGame}>START GAME</Button>
 			</div>
 		);
-	}
+	} else {
 
-	return (
-		<div className="select-none h-[90vh] flex items-center justify-center">
-			<Card className="p-4 w-fit max-h-[93vh] overflow-auto items-center mr-4">
-				<Card className="p-4 w-fit max-h-[93vh] overflow-auto items-center">
-					{[...Array(6)].map((_, index) => (
-						<Dice nr={index + 1} key={index} />
-					))}
-				</Card>
-				<Button>
-					ROLL
-				</Button>
-			</Card>
-
-			{gameState && (
-				<Card className="p-4 w-fit max-h-[93vh] overflow-auto">
-					<div className={`grid border border-gray-300 text-sm`} style={{ gridTemplateColumns: `200px repeat(${gameState.players.length}, 100px)` }}>
-						<div className="font-semibold border border-gray-300 p-2 bg-gray-100">Name</div>
-						{gameState.players.map((player, idx) => (  // Replace `_` with `player`
-							<div key={`player-${idx}`} className="border border-gray-300 p-2 font-semibold text-center bg-gray-100">
-								{player.player.username} {/* Access the username here */}
-							</div>
+		return (
+			<div className="select-none h-[90vh] flex items-center justify-center">
+				<Card className="p-4 w-fit max-h-[93vh] overflow-auto items-center mr-4">
+					<Card className="p-4 w-fit max-h-[93vh] overflow-auto items-center">
+						{gameState?.diceValues?.map((value, index) => (
+							<Dice nr={value} key={index} />
 						))}
-
-						{categories.map((cat, idx) => {
-							const highlight = ["TOTAL", "BONUS 50 points", "Total score"].includes(cat);
-							const labelCellClass = `border border-gray-300 p-2 ${highlight ? "bg-gray-100 font-semibold" : ""}`;
-
-							return (
-								<React.Fragment key={`row-${idx}`}>
-									<div className={labelCellClass}>{cat}</div>
-									{gameState.players.map((_, i) => {
-										const valueCellClass = `border border-gray-300 p-2 text-center ${highlight ? "bg-gray-100 font-semibold" : " hover:bg-blue-100"}`;
-										return (
-											<div onClick={(e) => handleCellClick(e)} key={`cell-${idx}-${i}`} className={valueCellClass}>
-												{/* Render from gameState if available */}
-											</div>
-										);
-									})}
-								</React.Fragment>
-							);
-						})}
-					</div>
+					</Card>
+					<Button onClick={handleRollClick}>
+						ROLL
+					</Button>
 				</Card>
-			)}
-		</div>
-	);
+
+				{gameState && (
+					<Card className="p-4 w-fit max-h-[93vh] overflow-auto">
+						<div className={`grid border border-gray-300 text-sm`} style={{ gridTemplateColumns: `200px repeat(${gameState.players.length}, 100px)` }}>
+							<div className="font-semibold border border-gray-300 p-2 bg-gray-100">Name</div>
+							{gameState.players.map((player, idx) => (  // Replace `_` with `player`
+								<div key={`player-${idx}`} className="border border-gray-300 p-2 font-semibold text-center bg-gray-100">
+									{player.player.username} {/* Access the username here */}
+								</div>
+							))}
+
+							{categories.map((cat, idx) => {
+								const highlight = ["TOTAL", "BONUS 50 points", "Total score"].includes(cat);
+								const labelCellClass = `border border-gray-300 p-2 ${highlight ? "bg-gray-100 font-semibold" : ""}`;
+
+								return (
+									<React.Fragment key={`row-${idx}`}>
+										<div className={labelCellClass}>{cat}</div>
+										{gameState.players.map((_, i) => {
+											const valueCellClass = `border border-gray-300 p-2 text-center ${highlight ? "bg-gray-100 font-semibold" : " hover:bg-blue-100"}`;
+											return (
+												<div onClick={(e) => handleCellClick(e)} key={`cell-${idx}-${i}`} className={valueCellClass}>
+													{/* Render from gameState if available */}
+												</div>
+											);
+										})}
+									</React.Fragment>
+								);
+							})}
+						</div>
+					</Card>
+				)}
+			</div>
+		);
+	}
 }
 
