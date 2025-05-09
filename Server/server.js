@@ -35,7 +35,7 @@ async function startServer() {
 
     app.use("/api/players", playerRoutes);
 
-    app.use("/api/lobbies", lobbyRoutes);
+    app.use("/api/lobbies", authenticateToken, lobbyRoutes);
 
     app.use("/api/logic", authenticateToken, logicRoutes);
 
