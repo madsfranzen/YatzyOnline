@@ -39,6 +39,7 @@ async function startServer() {
 
     app.use("/api/logic", authenticateToken, logicRoutes);
 
+
     const port = process.env.SERVER_PORT;
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);

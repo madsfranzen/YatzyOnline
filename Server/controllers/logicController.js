@@ -1,6 +1,15 @@
 import Game from "../models/game.js";
 import Lobby from "../models/lobby.js";
 
+export async function getGameState(req, res) {
+  try {
+    const lobbyId = req.params.lobbyId;
+    const game = Game.find({ lobbyId });
+
+    res.status(200).json({game, message: "GameState retrieved successfully" });
+  } catch (error) {}
+}
+
 export async function getValues(req, res) {
   try {
     console.log(req.user);
@@ -9,7 +18,6 @@ export async function getValues(req, res) {
   } catch (error) {}
 }
 
-<<<<<<< Updated upstream
 export async function holdDice(req, res) {
   try {
     console.log(req.user);
@@ -34,21 +42,19 @@ export async function holdResult(req, res) {
   } catch (error) {}
 }
 
- 
-=======
 export async function throwDice(req, res) {
   try {
     const player = req.user;
 
     const lobbyId = req.body;
 
-    const players = await Lobby.findById(lobbyId).populate('game').populate('players');
+    const players = await Lobby.findById(lobbyId)
+      .populate("game")
+      .populate("players");
 
-    console.log(players)
+    console.log(players);
 
-    res.status(200).json({ players})
-    
-
+    res.status(200).json({ players });
 
     throwDice = () => {
       this.throwCount++;
@@ -60,4 +66,3 @@ export async function throwDice(req, res) {
     };
   } catch (error) {}
 }
->>>>>>> Stashed changes
