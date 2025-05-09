@@ -5,7 +5,12 @@ export async function getLobbyByID(req, res) {
   try {
     const { lobbyID } = req.params;
 
-    const lobby = await Lobby.findById(lobbyID);
+    const lobby = await Lobby.findById(lobbyID)
+      .populate({
+        path: "players",
+        select: "username",  // Ensures that username is populated
+        model: "Player",     // Ensures correct model is populated
+			});
 
     if (!lobby) {
       return res.status(404).json({ message: "No lobby found" });
@@ -54,16 +59,10 @@ export async function joinLobby(req, res) {
   try {
     const lobbyId = req.params.lobbyId;
 
-    console.log(lobbyId);
-
     const user = req.user;
-
-    console.log(user);
 
     // Find the lobby
     const lobby = await Lobby.findById(lobbyId);
-
-		console.log(lobby)
 
     if (!lobby) {
       return res.status(404).json({ message: "Lobby not found." });
@@ -84,8 +83,6 @@ export async function joinLobby(req, res) {
         { $push: { players: user.id } },
         { new: true }
       );
-
-      console.log(updatedLobby);
 
       return res
         .status(200)

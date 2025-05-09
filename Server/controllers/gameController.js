@@ -2,6 +2,7 @@ import Lobby from "../models/lobby.js";
 import Game from "../models/game.js";
 
 export async function createGame(req, res) {
+	console.log("CREATE GAME CALLED")
   try {
     const { lobbyId } = req.body;
 

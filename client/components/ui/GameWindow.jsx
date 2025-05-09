@@ -16,6 +16,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function GameWindow({ lobbyID }) {
 	const [gameState, setGameState] = useState(null); // This could include dice, scores, etc.
+	const [playersInLobby, setPlayersInLobby] = useState(null); // This could include dice, scores, etc.
 
 	useEffect(() => {
 		let active = true;
@@ -31,9 +32,20 @@ export default function GameWindow({ lobbyID }) {
 
 					if (res.ok) {
 						const data = await res.json();
-						console.log(data)
 						setGameState(data.game); // Update state with new game data
+					} else {
+						console.log("GAME NOT STARTED YET")
+						const res = await fetch(`${BACKEND_URL}/lobbies/${lobbyID}`, {
+							method: "GET",
+							credentials: "include", // required for cookie auth
+							headers: { "Content-Type": "application/json" }
+						});
+						if (res.ok) {
+							const data = await res.json();
+							setPlayersInLobby(data.players)
+						}
 					}
+
 				} catch (err) {
 					console.error("Polling failed", err);
 				}
@@ -48,8 +60,36 @@ export default function GameWindow({ lobbyID }) {
 		};
 	}, [lobbyID]);
 
-	async function handleCellClick(e) {
+	async function handleCellClick(_e) {
 		// Send updates to the server here
+	}
+
+	async function startGame() {
+		await fetch(`${BACKEND_URL}/game`, {
+			method: "POST",
+			body: JSON.stringify({
+				lobbyId: lobbyID
+			}),
+			credentials: "include",
+			headers: { "Content-Type": "application/json" }
+		});
+		console.log("GAME STARTED")
+	}
+
+	if (!gameState && playersInLobby) {
+		return (
+			<div className="select-none h-[90vh] flex items-center justify-center">
+				<Card className="p-4 w-fit max-h-[93vh] overflow-auto items-center mr-4">
+					<h1>PLAYERS IN LOBBY:</h1>
+					{playersInLobby.map((player, idx) => (
+						<div key={`player-${idx}`} className="border border-gray-300 p-2 font-semibold text-center bg-gray-100">
+							{player?.username || "Unknown"}
+						</div>
+					))}
+				</Card>
+				<Button onClick={startGame}>START GAME</Button>
+			</div>
+		);
 	}
 
 	return (

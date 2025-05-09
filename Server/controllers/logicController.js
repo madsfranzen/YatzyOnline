@@ -16,6 +16,7 @@ export async function getGameState(req, res) {
     // Return the game state with player usernames
     res.status(200).json({ game, message: "GameState retrieved successfully" });
   } catch (error) {
+		console.log("NO GAME FOUND")
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
