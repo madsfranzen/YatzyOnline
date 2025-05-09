@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const lobbySchema = new mongoose.Schema({
 	lobbyName: {type: String, required: true},
-	playerCount: {type: Number, required: false, default: 0},
 	playerMax: {type: Number, required: true},
+	players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player'}],
 	game: {type: mongoose.Schema.Types.ObjectId, ref: 'Game'},
 });
 

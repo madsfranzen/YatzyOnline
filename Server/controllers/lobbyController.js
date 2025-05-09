@@ -1,3 +1,4 @@
+import Game from "../models/game.js";
 import Lobby from "../models/lobby.js";
 
 export async function getLobbyByID(req, res) {
@@ -32,6 +33,23 @@ export async function getLobbies(_req, res) {
   }
 }
 
+export async function createGame(req, res) {
+
+  try {
+
+    
+
+    const Game = new Game(players);
+    
+
+
+    
+  } catch (error) {
+    
+  }
+
+}
+
 export async function createLobby(req, res) {
   try {
     const { lobbyName, playerMax } = req.body;
@@ -53,26 +71,36 @@ export async function joinLobby(req, res) {
   try {
     const { lobbyId } = req.body;
 
-    // Find the lobby first
+    const user = req.user;
+
+    // Find the lobby
     const lobby = await Lobby.findById(lobbyId);
+    
     if (!lobby) {
       return res.status(404).json({ message: "Lobby not found." });
     }
 
+    if (lobby.players.some(p => p._id === user._id)) {
+      return res.status(400).json({ message: "Player already in the lobby." });
+    }
+
     // Check if lobby is full
-    if (lobby.playerCount < lobby.playerMax) {
+    if (lobby.players.length < lobby.playerMax) {
+
       const updatedLobby = await Lobby.findByIdAndUpdate(
         lobbyId,
-        { $inc: { playerCount: 1 } },
+        { $push: { players: user._id }},
         { new: true },
       );
 
       return res
         .status(200)
         .json({ message: "Successfully joined lobby.", lobby: updatedLobby });
+
     } else {
       return res.status(400).json({ message: "Lobby is full." });
     }
+
   } catch (error) {
     return res.status(500).json({ message: "Internal server error." });
   }
