@@ -4,9 +4,8 @@ import Lobby from "../models/lobby.js";
 export async function getGameState(req, res) {
   try {
     const lobbyId = req.params.lobbyId;
-    const game = Game.find({ lobbyId });
-
-    res.status(200).json({game, message: "GameState retrieved successfully" });
+    const game = await Game.find({ lobby: lobbyId });
+    res.status(200).json({ game, message: "GameState retrieved successfully" });
   } catch (error) {}
 }
 
