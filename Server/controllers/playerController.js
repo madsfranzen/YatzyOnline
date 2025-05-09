@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 
 export async function createPlayer(req, res) {
   try {
+    console.log("Started making user");
     const { username, password } = req.body;
 
      const hashedPassword = bcrypt.hashSync(password, 10);
