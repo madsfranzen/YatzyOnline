@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/ui/Navbar';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import GameWindow from '@/components/ui/GameWindow';
 import { leaveGame } from '@/actions/leaveGame';
 

@@ -2,7 +2,7 @@
 import LobbyClient from './LobbyClient';
 
 export default async function Page({ params }) {
-  const { lobbyID } = await params; // or just use params.lobbyID directly
+  const { lobbyID } = await params;
   return <LobbyClient lobbyID={lobbyID} />;
 }
 
