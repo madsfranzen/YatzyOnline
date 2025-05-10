@@ -17,8 +17,31 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 export default function GameWindow({ lobbyID }) {
 	const [gameState, setGameState] = useState(null); // This is used for actaul game (loaded from game)
 	const [playersInLobby, setPlayersInLobby] = useState(null); // This is only used for waiting screen (loaded from lobby)
+	const [me, setMe] = useState(null);
 
 	useEffect(() => {
+
+		fetch(BACKEND_URL + "/auth/me", {
+			credentials: "include",
+		})
+			.then(async (res) => {
+				if (res.ok) {
+					const data = await res.json();
+					setMe(data.username);
+				} else if (res.status === 401) {
+					// Not logged in
+					setMe(null);
+				} else {
+					// Other errors
+					console.error("Unexpected error:", res.status);
+					setMe(null);
+				}
+			})
+			.catch((err) => {
+				console.error("Fetch failed:", err);
+				setMe(null);
+			});
+
 		let active = true;
 
 		async function poll() {
@@ -71,7 +94,26 @@ export default function GameWindow({ lobbyID }) {
 	}
 
 	async function handleRollClick(_e) {
-		console.log("ROLL")
+		if (!gameState || !me) return;
+
+		const currentPlayer = gameState.players.find(p => p.player.username === me);
+
+		if (currentPlayer?.isTurn) {
+			console.log("ROLL: It's your turn!");
+			await fetch(`${BACKEND_URL}/game/roll`, {
+				method: "POST",
+				body: JSON.stringify({
+					lobbyId: lobbyID,
+					username: me,
+				}),
+				credentials: "include",
+				headers: { "Content-Type": "application/json" }
+			});
+
+
+		} else {
+			console.log("ROLL: It's not your turn!");
+		}
 	}
 
 	async function startGame() {
@@ -110,7 +152,11 @@ export default function GameWindow({ lobbyID }) {
 							<Dice nr={value} key={index} />
 						))}
 					</Card>
-					<Button onClick={handleRollClick}>
+					<p>Roll count: {gameState?.throwCount}/3</p>
+					<Button
+						onClick={handleRollClick}
+						className={`${gameState?.throwCount === 3 ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`}
+					>
 						ROLL
 					</Button>
 				</Card>

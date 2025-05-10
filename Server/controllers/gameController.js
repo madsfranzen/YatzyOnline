@@ -47,3 +47,23 @@ export async function createGame(req, res) {
     return res.status(500).json({ message: "Internal server error." });
   }
 }
+
+export async function rollDice(req, res) {
+  const lobbyId = req.body.lobbyId;
+
+  const lobby = await Lobby.findById(lobbyId).populate("game");
+  const game = lobby.game;
+  game.diceValues = randomDice();
+  game.throwCount++;
+  await lobby.game.save();
+
+  console.log(game);
+}
+
+function randomDice() {
+  const dice = [];
+  for (let i = 0; i < 5; i++) {
+    dice.push(Math.floor(Math.random() * 6) + 1);
+  }
+  return dice;
+}
