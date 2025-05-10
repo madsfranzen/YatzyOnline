@@ -6,7 +6,7 @@ export async function SignUp(prevState, formData) {
 
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
   try {
-    const res = await fetch(BACKEND_URL + "/api/players", {
+    const res = await fetch(BACKEND_URL + "/players", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),

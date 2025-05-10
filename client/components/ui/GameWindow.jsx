@@ -153,12 +153,19 @@ export default function GameWindow({ lobbyID }) {
 						))}
 					</Card>
 					<p>Roll count: {gameState?.throwCount}/3</p>
-					<Button
-						onClick={handleRollClick}
-						className={`${gameState?.throwCount === 3 ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`}
-					>
-						ROLL
-					</Button>
+					{gameState &&
+						me &&
+						gameState.players?.find(p => p.player.username === me)?.isTurn && (
+							<Button
+								onClick={handleRollClick}
+								className={`${gameState.throwCount === 3
+										? "opacity-50 cursor-not-allowed pointer-events-none"
+										: ""
+									}`}
+							>
+								ROLL
+							</Button>
+						)}
 				</Card>
 
 				{gameState && (

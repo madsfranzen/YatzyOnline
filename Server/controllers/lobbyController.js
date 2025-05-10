@@ -105,31 +105,40 @@ export async function leaveLobby(req, res) {
     }
 
     const isInLobby = lobby.players.some(
-      (p) => p._id.toString() === user.id.toString(),
+      (p) => p.toString() === user.id.toString(), // ensure the check works properly
     );
     if (!isInLobby) {
       return res.status(400).json({ message: "Player not in this lobby." });
     }
 
-    // Remove the player
+    // Remove the player from the lobby
     const updatedLobby = await Lobby.findByIdAndUpdate(
       lobbyId,
       { $pull: { players: user.id } },
       { new: true },
     );
 
-    // If no players are left, clear the game and remove the lobby reference in the game
-    if (updatedLobby.players.length === 0 && updatedLobby.game) {
-      // Remove the reference from the Game document
-      const game = await Game.findById(updatedLobby.game);
-      if (game) {
-        game.lobby = null; // Remove the lobby reference in the game
-        await game.save();
+    const game = updatedLobby.game;
+
+    if (game) {
+      // Find and remove the player from the Game document
+      const updatedGame = await Game.findByIdAndUpdate(
+        game,
+        { $pull: { players: { player: user.id } } }, // Pull the player object from the players array
+        { new: true },
+      );
+
+      // If no players are left, remove the reference to the lobby and nullify the game in the lobby
+      if (updatedGame.players.length === 0) {
+        updatedGame.lobby = null; // Remove the lobby reference in the game
+        await updatedGame.save();
       }
 
-      // Nullify the game reference in the lobby
-      updatedLobby.game = null;
-      await updatedLobby.save();
+      // If no players are left in the lobby, clear the game reference
+      if (updatedLobby.players.length === 0) {
+        updatedLobby.game = null; // Nullify the game reference in the lobby
+        await updatedLobby.save();
+      }
     }
 
     return res.status(200).json({
@@ -137,6 +146,7 @@ export async function leaveLobby(req, res) {
       lobby: updatedLobby,
     });
   } catch (error) {
+    console.error("Error leaving lobby:", error);
     return res.status(500).json({ message: "Internal server error." });
   }
 }
