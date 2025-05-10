@@ -1,11 +1,15 @@
-"use client";
-
 export async function SignUp(prevState, formData) {
+  if (!(formData instanceof FormData)) {
+    console.error("Invalid formData passed to SignUp");
+    return { success: false, error: "Invalid form data" };
+  }
+
   const username = formData.get("username");
   const password = formData.get("password");
 
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
   try {
+    console.log("Creating a new user with username:", username);
     const res = await fetch(BACKEND_URL + "/players", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -14,17 +18,15 @@ export async function SignUp(prevState, formData) {
     });
 
     if (!res.ok) {
-      // const errorText = await res.text();
-      return { error: "Invalid username or password." };
+      return {
+        success: false,
+        error: "Error in Creating a User, Username is Taken",
+      };
     }
-
-    // const data = await res.json();
-
-    // Store token/cookies if needed here (using cookies().set(...))
 
     return { success: true };
   } catch (err) {
-    console.error("Login error:", err);
-    return { error: "Unexpected error. Please try again." };
+    console.error("Signup error:", err);
+    return { success: false, error: "Unexpected error. Please try again." };
   }
 }
