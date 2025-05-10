@@ -41,7 +41,7 @@ export async function createGame(req, res) {
     // Prepare players for the game
     const playersWithScoreboards = lobby.players.map((p, index) => ({
       player: p._id,
-      scoreboard: createEmptyScoreboard(), // or your detailed scoreboard structure
+      scoreboard: createEmptyScoreboard(),
       isTurn: index === 0, // true for the first player, false for others
     }));
 
@@ -51,8 +51,6 @@ export async function createGame(req, res) {
       players: playersWithScoreboards,
       throwCount: 0,
     });
-
-    // SET FIRST PLAYER isTurn TO TRUE HERE
 
     await newGame.save();
 
@@ -92,10 +90,8 @@ export async function rollDice(req, res) {
     player.scoreboard = createEmptyScoreboard();
   }
 
-  // Update the player's scoreboard (assuming calculateScore is defined properly)
   player.scoreboard = calculateScore(game.diceValues, player.scoreboard);
 
-  // After modifying the scoreboard
   const playerIndex = game.players.findIndex(
     (p) => p.player.toString() === req.user.id.toString(),
   );
@@ -109,7 +105,7 @@ export async function rollDice(req, res) {
     game.markModified("players");
   }
 
-  // Save
+  // Save to DB
   try {
     await game.save();
     return res.status(200).json({ message: "Dice rolled successfully.", game });
@@ -121,7 +117,6 @@ export async function rollDice(req, res) {
   }
 }
 
-// Function to generate random dice rolls
 function randomDice() {
   const dice = [];
   for (let i = 0; i < 5; i++) {
@@ -134,8 +129,8 @@ function calculateScore(diceValues, existingScoreboard) {
   // Deep copy to avoid mutating original object
   const updatedScore = JSON.parse(JSON.stringify(existingScoreboard));
 
-  // Example: update score for 'ones' through 'sixes'
-  const scoreCategories = ['ones', 'twos', 'threes', 'fours', 'fives', 'sixes'];
+  // Update score for 'ones' through 'sixes'
+  const scoreCategories = ["ones", "twos", "threes", "fours", "fives", "sixes"];
 
   for (let i = 0; i < scoreCategories.length; i++) {
     const category = scoreCategories[i];
@@ -143,9 +138,12 @@ function calculateScore(diceValues, existingScoreboard) {
     const count = diceValues.filter((val) => val === faceValue).length;
 
     updatedScore[category].value = count * faceValue;
-    updatedScore[category].status = true; // Assume it's been filled
+
+    // used for holds (handleCellClick())
+    // updatedScore[category].status = true;
   }
+
+  // TODO: THIS IS WHERE WE IMPLEMENT ALL LOGIC
 
   return updatedScore;
 }
-
