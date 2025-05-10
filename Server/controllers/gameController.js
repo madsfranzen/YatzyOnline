@@ -1,6 +1,27 @@
 import Lobby from "../models/lobby.js";
 import Game from "../models/game.js";
 
+const createEmptyScoreboard = () => ({
+  ones: { value: 0, status: false },
+  twos: { value: 0, status: false },
+  threes: { value: 0, status: false },
+  fours: { value: 0, status: false },
+  fives: { value: 0, status: false },
+  sixes: { value: 0, status: false },
+  onePairs: { value: 0, status: false },
+  twoPairs: { value: 0, status: false },
+  threePairs: { value: 0, status: false },
+  fourPairs: { value: 0, status: false },
+  fullHouse: { value: 0, status: false },
+  smallStraight: { value: 0, status: false },
+  largeStraight: { value: 0, status: false },
+  chance: { value: 0, status: false },
+  yatzy: { value: 0, status: false },
+  bonus: { value: 0, status: true },
+  total: { value: 0, status: true },
+  totalScore: { value: 0, status: true },
+});
+
 export async function createGame(req, res) {
   console.log("CREATE GAME CALLED");
 
@@ -20,7 +41,7 @@ export async function createGame(req, res) {
     // Prepare players for the game
     const playersWithScoreboards = lobby.players.map((p, index) => ({
       player: p._id,
-      scoreboard: {}, // or your detailed scoreboard structure
+      scoreboard: createEmptyScoreboard(), // or your detailed scoreboard structure
       isTurn: index === 0, // true for the first player, false for others
     }));
 
@@ -47,19 +68,60 @@ export async function createGame(req, res) {
     return res.status(500).json({ message: "Internal server error." });
   }
 }
-
 export async function rollDice(req, res) {
-  const lobbyId = req.body.lobbyId;
+  const { lobbyId } = req.body;
 
   const lobby = await Lobby.findById(lobbyId).populate("game");
   const game = lobby.game;
+
+  // Roll the dice
   game.diceValues = randomDice();
   game.throwCount++;
-  await lobby.game.save();
 
-  console.log(game);
+  // Find the player in the game
+  const player = game.players.find(
+    (p) => p.player.toString() === req.user.id.toString(),
+  );
+
+  if (!player) {
+    return res.status(400).json({ message: "Player not found in the game." });
+  }
+
+  // Ensure scoreboard is initialized
+  if (!player.scoreboard) {
+    player.scoreboard = createEmptyScoreboard();
+  }
+
+  // Update the player's scoreboard (assuming calculateScore is defined properly)
+  player.scoreboard = calculateScore(game.diceValues, player.scoreboard);
+
+  // After modifying the scoreboard
+  const playerIndex = game.players.findIndex(
+    (p) => p.player.toString() === req.user.id.toString(),
+  );
+
+  if (playerIndex !== -1) {
+    game.players[playerIndex].scoreboard = calculateScore(
+      game.diceValues,
+      game.players[playerIndex].scoreboard,
+    );
+
+    game.markModified("players");
+  }
+
+  // Save
+  try {
+    await game.save();
+    return res.status(200).json({ message: "Dice rolled successfully.", game });
+  } catch (error) {
+    console.error("Error saving the game:", error);
+    return res
+      .status(500)
+      .json({ message: "Failed to update the game", error });
+  }
 }
 
+// Function to generate random dice rolls
 function randomDice() {
   const dice = [];
   for (let i = 0; i < 5; i++) {
@@ -67,3 +129,23 @@ function randomDice() {
   }
   return dice;
 }
+
+function calculateScore(diceValues, existingScoreboard) {
+  // Deep copy to avoid mutating original object
+  const updatedScore = JSON.parse(JSON.stringify(existingScoreboard));
+
+  // Example: update score for 'ones' through 'sixes'
+  const scoreCategories = ['ones', 'twos', 'threes', 'fours', 'fives', 'sixes'];
+
+  for (let i = 0; i < scoreCategories.length; i++) {
+    const category = scoreCategories[i];
+    const faceValue = i + 1;
+    const count = diceValues.filter((val) => val === faceValue).length;
+
+    updatedScore[category].value = count * faceValue;
+    updatedScore[category].status = true; // Assume it's been filled
+  }
+
+  return updatedScore;
+}
+

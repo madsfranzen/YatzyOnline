@@ -85,12 +85,12 @@ const gameSchema = new mongoose.Schema({
   throwCount: { type: Number, default: 0 },
   diceValues: {
     type: [Number],
-    default: [6, 5, 4, 3, 2, 1], // initial dice values
+    default: [5, 4, 3, 2, 1], // initial dice values
   },
 
   diceHolds: {
     type: [Boolean],
-    default: [false, false, false, false, false, false], // none held initially
+    default: [false, false, false, false, false], // none held initially
   },
 });
 
