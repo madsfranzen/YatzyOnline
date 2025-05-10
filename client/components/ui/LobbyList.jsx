@@ -71,6 +71,9 @@ export default function LobbyList({ username }) {
 										<p className="text-sm text-muted-foreground">
 											{lobby.players.length}/{lobby.playerMax} players
 										</p>
+											{lobby.game != null ? 
+											<p className="text-sm text-muted-foreground">Game in progress</p> : <p className="text-sm text-muted-foreground"></p>
+											}
 									</div>
 									<div className="flex justify-center mt-2">
 										{lobby.players.length === lobby.playerMax ? (
