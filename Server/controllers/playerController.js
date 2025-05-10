@@ -6,7 +6,7 @@ export async function createPlayer(req, res) {
     console.log("Started making user");
     const { username, password } = req.body;
 
-     const hashedPassword = bcrypt.hashSync(password, 10);
+    const hashedPassword = bcrypt.hashSync(password, 10);
 
     const player = new Player({
       username,
@@ -17,14 +17,19 @@ export async function createPlayer(req, res) {
 
     res.status(201).json(player);
   } catch (error) {
+    if (error.code === 11000) {
+      // MongoDB duplicate key error code
+      console.error("Duplicate username error: ", error);
+      return res.status(400).json({ message: "Username is already taken" });
+    }
     console.error("Error creating user: ", error);
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
 export async function getPlayer(req, res) {
   try {
-    const { id } = req.params
+    const { id } = req.params;
 
     console.log(id);
 
