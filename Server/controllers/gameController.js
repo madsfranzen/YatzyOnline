@@ -10,11 +10,13 @@ const createEmptyScoreboard = () => ({
   sixes: { value: 0, status: false },
   onePairs: { value: 0, status: false },
   twoPairs: { value: 0, status: false },
-  threePairs: { value: 0, status: false },
-  fourPairs: { value: 0, status: false },
+  threeOfAKind: { value: 0, status: false },
+  fourOfAKind: { value: 0, status: false },
+  twoXThreeOfAKind: { value: 0, status: false },
   fullHouse: { value: 0, status: false },
   smallStraight: { value: 0, status: false },
   largeStraight: { value: 0, status: false },
+  royalStraight: { value: 0, status: false },
   chance: { value: 0, status: false },
   yatzy: { value: 0, status: false },
   bonus: { value: 0, status: true },
@@ -66,6 +68,90 @@ export async function createGame(req, res) {
     return res.status(500).json({ message: "Internal server error." });
   }
 }
+
+export async function holdResult(req, res) {
+  try {
+    const { lobbyId, username, category } = req.body;
+
+    if (!lobbyId || !username || !category) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const lobby = await Lobby.findById(lobbyId);
+    if (!lobby) return res.status(404).json({ error: "Lobby not found" });
+
+    const game = await Game.findOne({ lobby: lobby._id }).populate(
+      "players.player",
+    );
+    if (!game) return res.status(404).json({ error: "Game not found" });
+
+    const playerIndex = game.players.findIndex(
+      (p) => p.player.username === username,
+    );
+    if (playerIndex === -1)
+      return res.status(404).json({ error: "Player not found in game" });
+
+    const player = game.players[playerIndex];
+
+    if (!player.scoreboard[category])
+      return res.status(400).json({ error: "Invalid category" });
+
+    const scoreField = player.scoreboard[category];
+
+    if (scoreField.status) {
+      return res.status(400).json({ error: "Category already used" });
+    }
+
+    // Lock the category
+    scoreField.status = true;
+
+    // --- Recalculate bonus and totals ---
+    const scoreCategories = ["ones", "twos", "threes", "fours", "fives", "sixes"];
+    const upperTotal = scoreCategories.reduce((sum, cat) => {
+      return sum + (player.scoreboard[cat]?.value || 0);
+    }, 0);
+
+    player.scoreboard["bonus"].value = upperTotal >= 63 ? 50 : 0;
+
+    let total = 0;
+    for (const [key, data] of Object.entries(player.scoreboard)) {
+      if (!["bonus", "total", "totalScore"].includes(key) && data.status) {
+        total += data.value || 0;
+      }
+    }
+
+    total += player.scoreboard["bonus"].value || 0;
+    player.scoreboard["total"].value = total;
+    player.scoreboard["totalScore"].value = total;
+
+    // --- Rotate turn ---
+    const currentPlayerCount = game.players.length;
+    game.players[playerIndex].isTurn = false;
+    const nextIndex = (playerIndex + 1) % currentPlayerCount;
+    game.players[nextIndex].isTurn = true;
+
+    // --- Reset throwCount ---
+    game.throwCount = 0;
+
+    // --- Clear diceHolds ---
+    game.diceHolds = [false, false, false, false, false];
+
+    game.markModified("players");
+    game.markModified("diceHolds");
+
+    await game.save();
+
+    return res.status(200).json({
+      message: "Category held successfully",
+      scoreboard: player.scoreboard,
+    });
+  } catch (err) {
+    console.error("Error in holdResult:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+
 export async function rollDice(req, res) {
   const { lobbyId } = req.body;
 
@@ -126,24 +212,116 @@ function randomDice() {
 }
 
 function calculateScore(diceValues, existingScoreboard) {
-  // Deep copy to avoid mutating original object
   const updatedScore = JSON.parse(JSON.stringify(existingScoreboard));
 
-  // Update score for 'ones' through 'sixes'
-  const scoreCategories = ["ones", "twos", "threes", "fours", "fives", "sixes"];
+  const counts = {};
+  for (const val of diceValues) {
+    counts[val] = (counts[val] || 0) + 1;
+  }
 
+  const values = Object.values(counts);
+  const unique = Object.keys(counts).map(Number);
+
+  const scoreCategories = ["ones", "twos", "threes", "fours", "fives", "sixes"];
   for (let i = 0; i < scoreCategories.length; i++) {
     const category = scoreCategories[i];
     const faceValue = i + 1;
-    const count = diceValues.filter((val) => val === faceValue).length;
-
-    updatedScore[category].value = count * faceValue;
-
-    // used for holds (handleCellClick())
-    // updatedScore[category].status = true;
+    if (updatedScore[category].status === false) {
+      updatedScore[category].value = (counts[faceValue] || 0) * faceValue;
+    }
   }
 
-  // TODO: THIS IS WHERE WE IMPLEMENT ALL LOGIC
+  // One Pair
+  if (updatedScore["onePairs"].status === false) {
+    const pairs = Object.entries(counts)
+      .filter(([_, count]) => count >= 2)
+      .map(([val]) => Number(val))
+      .sort((a, b) => b - a);
+    updatedScore["onePairs"].value = pairs.length > 0 ? pairs[0] * 2 : 0;
+  }
+
+  // Two Pairs
+  if (updatedScore["twoPairs"].status === false) {
+    const pairs = Object.entries(counts)
+      .filter(([_, count]) => count >= 2)
+      .map(([val]) => Number(val))
+      .sort((a, b) => b - a);
+    updatedScore["twoPairs"].value =
+      pairs.length >= 2 ? pairs[0] * 2 + pairs[1] * 2 : 0;
+  }
+
+  // Three of a kind
+  if (updatedScore["threeOfAKind"].status === false) {
+    const threes = Object.entries(counts).find(([_, c]) => c >= 3);
+    updatedScore["threeOfAKind"].value = threes ? Number(threes[0]) * 3 : 0;
+  }
+
+  // Four of a kind
+  if (updatedScore["fourOfAKind"].status === false) {
+    const fours = Object.entries(counts).find(([_, c]) => c >= 4);
+    updatedScore["fourOfAKind"].value = fours ? Number(fours[0]) * 4 : 0;
+  }
+
+  // Full House
+  if (updatedScore["fullHouse"].status === false) {
+    const triplet = Object.entries(counts).find(([_, c]) => c === 3);
+    const pairForFullHouse = Object.entries(counts).find(
+      ([val, c]) => c === 2 && (!triplet || val !== triplet[0]),
+    );
+    if (triplet && pairForFullHouse) {
+      updatedScore["fullHouse"].value =
+        Number(triplet[0]) * 3 + Number(pairForFullHouse[0]) * 2;
+    } else {
+      updatedScore["fullHouse"].value = 0;
+    }
+  }
+
+  // Small Straight
+  if (updatedScore["smallStraight"].status === false) {
+    const smallStraightSet = new Set([1, 2, 3, 4, 5]);
+    const rolled = new Set(diceValues);
+    const isSmall = [...smallStraightSet].every((v) => rolled.has(v));
+    updatedScore["smallStraight"].value = isSmall ? 15 : 0;
+  }
+
+  // Large Straight
+  if (updatedScore["largeStraight"].status === false) {
+    const largeStraightSet = new Set([2, 3, 4, 5, 6]);
+    const rolled = new Set(diceValues);
+    const isLarge = [...largeStraightSet].every((v) => rolled.has(v));
+    updatedScore["largeStraight"].value = isLarge ? 20 : 0;
+  }
+
+  // Royal Straight (1–6)
+  if (updatedScore["royalStraight"]?.status === false) {
+    const rolled = new Set(diceValues);
+    const isRoyal = [1, 2, 3, 4, 5, 6].every((v) => rolled.has(v));
+    updatedScore["royalStraight"].value = isRoyal ? 30 : 0;
+  }
+
+  // Two x Three of a Kind (e.g., [3,3,3,5,5,5])
+  if (updatedScore["twoXThreeOfAKind"]?.status === false) {
+    const tripleValues = Object.entries(counts)
+      .filter(([_, count]) => count >= 3)
+      .map(([val]) => Number(val))
+      .sort((a, b) => b - a);
+    if (tripleValues.length >= 2) {
+      updatedScore["twoXThreeOfAKind"].value =
+        tripleValues[0] * 3 + tripleValues[1] * 3;
+    } else {
+      updatedScore["twoXThreeOfAKind"].value = 0;
+    }
+  }
+
+  // Chance
+  if (updatedScore["chance"].status === false) {
+    updatedScore["chance"].value = diceValues.reduce((a, b) => a + b, 0);
+  }
+
+  // Yatzy
+  if (updatedScore["yatzy"].status === false) {
+    updatedScore["yatzy"].value = values.includes(5) ? 50 : 0;
+  }
 
   return updatedScore;
 }

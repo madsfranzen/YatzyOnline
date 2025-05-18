@@ -4,9 +4,9 @@ import { Button } from "./button";
 import { Card } from "./card";
 
 const categories = [
-	"Ones", "Twos", "Threes", "Fours", "Fives", "Sixes",
-	"TOTAL", "BONUS 50 points",
-	"One pair", "Two pairs", "Three pairs", "Three of a kind", "Four of a kind", "Two x Three of a kind",
+	"Ones", "Twos", "Threes", "Fours", "Fives", "Sixes", "Total",
+"BONUS 50 points",
+	"One pair", "Two pairs", "Three of a kind", "Four of a kind", "Two x Three of a kind",
 	"Small straight 1-2-3-4-5", "Large straight 2-3-4-5-6",
 	"Royal straight 1-2-3-4-5-6", "Full house (3 + 2 of a kind)", "Chance", "YATZY",
 	"Total score"
@@ -89,9 +89,37 @@ export default function GameWindow({ lobbyID }) {
 		};
 	}, [lobbyID]);
 
-	async function handleCellClick(_e) {
-		// Send updates to the server here
+	async function handleCellClick(categoryKey, playerUsername) {
+		if (!gameState || !me) return;
+
+		// Only allow the current user to update their own score
+		if (me !== playerUsername) return;
+
+		const player = gameState.players.find(p => p.player.username === playerUsername);
+
+		if (!player || !player.scoreboard[categoryKey]) return;
+
+		const fieldStatus = player.scoreboard[categoryKey].status;
+
+		if (fieldStatus === false) {
+			console.log(`Setting score for category ${categoryKey}`);
+
+			// Send update to backend
+			await fetch(`${BACKEND_URL}/game/holdResult`, {
+				method: "POST",
+				body: JSON.stringify({
+					lobbyId: lobbyID,
+					username: me,
+					category: categoryKey
+				}),
+				credentials: "include",
+				headers: { "Content-Type": "application/json" }
+			});
+		} else {
+			console.log(`Category "${categoryKey}" already used!`);
+		}
 	}
+
 
 	async function handleRollClick(_e) {
 		if (!gameState || !me) return;
@@ -188,7 +216,7 @@ export default function GameWindow({ lobbyID }) {
 							))}
 
 							{categories.map((cat, idx) => {
-								const highlight = ["TOTAL", "BONUS 50 points", "Total score"].includes(cat);
+								const highlight = ["Total", "BONUS 50 points", "Total score"].includes(cat);
 								const labelCellClass = `border border-gray-300 p-2 ${highlight ? "bg-gray-100 font-semibold" : ""}`;
 
 								// Mapping the category names to scoreboard keys
@@ -199,9 +227,9 @@ export default function GameWindow({ lobbyID }) {
 									"Fours": "fours",
 									"Fives": "fives",
 									"Sixes": "sixes",
+									"Total": "total",
 									"One pair": "onePairs",
 									"Two pairs": "twoPairs",
-									"Three pairs": "threePairs",
 									"Three of a kind": "threeOfAKind",
 									"Four of a kind": "fourOfAKind",
 									"Two x Three of a kind": "twoXThreeOfAKind",
@@ -221,14 +249,20 @@ export default function GameWindow({ lobbyID }) {
 									<React.Fragment key={`row-${idx}`}>
 										<div className={labelCellClass}>{cat}</div>
 										{gameState.players.map((player, i) => {
-											const valueCellClass = `border border-gray-300 p-2 text-center ${highlight ? "bg-gray-100 font-semibold" : "hover:bg-blue-100"}`;
+											const fieldStatus = player.scoreboard[scoreboardKey]?.status;
+
+											const valueCellClass = `
+  border border-gray-300 p-2 text-center
+  ${highlight ? "bg-gray-100 font-semibold" : ""}
+  ${fieldStatus === true ? "bg-blue-100 font-semibold" : "hover:bg-blue-100 cursor-pointer"}
+`;
 
 											// Get the score for the current category and player using the mapped scoreboard key
 											const playerScore = getPlayerScore(player, scoreboardKey);
 
 											return (
 												<div
-													onClick={(e) => handleCellClick(e)}
+													onClick={() => handleCellClick(scoreboardKey, player.player.username)}
 													key={`cell-${idx}-${i}`}
 													className={valueCellClass}
 												>

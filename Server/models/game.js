@@ -39,11 +39,15 @@ const gameSchema = new mongoose.Schema({
           value: { type: Number, default: 0 },
           status: { type: Boolean, default: false },
         },
-        threePairs: {
+        threeOfAKind: {
           value: { type: Number, default: 0 },
           status: { type: Boolean, default: false },
         },
-        fourPairs: {
+        fourOfAKind: {
+          value: { type: Number, default: 0 },
+          status: { type: Boolean, default: false },
+        },
+        twoXThreeOfAKind: {
           value: { type: Number, default: 0 },
           status: { type: Boolean, default: false },
         },
@@ -56,6 +60,10 @@ const gameSchema = new mongoose.Schema({
           status: { type: Boolean, default: false },
         },
         largeStraight: {
+          value: { type: Number, default: 0 },
+          status: { type: Boolean, default: false },
+        },
+        royalStraight: {
           value: { type: Number, default: 0 },
           status: { type: Boolean, default: false },
         },
