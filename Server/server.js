@@ -9,6 +9,7 @@ import gameRoutes from "./routes/gameRoutes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { authenticateToken } from "./middleware/auth.js";
+import { optionalAuthenticateToken } from "./middleware/optAuth.js";
 
 dotenv.config();
 
@@ -38,7 +39,7 @@ async function startServer() {
 
     app.use("/api/game", authenticateToken, gameRoutes);
 
-    app.use("/api/lobbies", authenticateToken, lobbyRoutes);
+    app.use("/api/lobbies", optionalAuthenticateToken, lobbyRoutes);
 
     app.use("/api/logic", authenticateToken, logicRoutes);
 
